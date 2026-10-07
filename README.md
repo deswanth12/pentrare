@@ -7,7 +7,7 @@
 <p align="center">
   <a href="https://github.com/deswanth12/pentrare/releases"><img src="https://img.shields.io/badge/Release-v1.0.0-blue.svg" alt="Release v1.0.0" /></a>
   <a href="https://github.com/deswanth12/pentrare/actions/workflows/ci.yml"><img src="https://github.com/deswanth12/pentrare/actions/workflows/ci.yml/badge.svg" alt="CI" /></a>
-  <img src="https://img.shields.io/badge/Tests-384%20Passing-brightgreen.svg" alt="384 Tests Passing" />
+  <img src="https://img.shields.io/badge/Tests-399%20Passing-brightgreen.svg" alt="399 Tests Passing" />
   <img src="https://img.shields.io/badge/Python-3.10%20%7C%203.11%20%7C%203.12-blue.svg" alt="Python 3.10–3.12" />
   <a href="LICENSE"><img src="https://img.shields.io/badge/License-MIT-green.svg" alt="MIT License" /></a>
   <img src="https://img.shields.io/badge/Gemini%20CLI-Extension%20Ready-blueviolet.svg" alt="Gemini CLI Extension" />
@@ -87,7 +87,7 @@ flowchart TD
 | Gemini API | Optional online LLM reasoning (offline fallback available) |
 | Pydantic | Data validation and model definitions |
 | Click | CLI framework |
-| pytest | Test suite (384 tests) |
+| pytest | Test suite (399 tests) |
 | Gemini CLI | Conversational interface via slash commands and agent skills |
 
 ---
@@ -121,33 +121,38 @@ All results from `python app/main.py pentrare test` and `FINAL_RELEASE_AUDIT.md`
 
 | Metric | Result |
 |--------|--------|
-| Total tests | **384 passing** |
-| Failing tests | 0 |
+| Total tests | **399 passing** |
+| Failing tests | **0** |
 | CI configuration | GitHub Actions, Python 3.10–3.12 |
 
-### Synthetic Benchmark (25 Scenarios, Offline)
+### Research Benchmark (100 Scenarios, Offline Suite)
 
 | Metric | Measured Result | Role |
 |--------|-----------------|------|
 | False Confirmation Rate (FCR) | **0.0%** (0 false confirmations) | Critical — any false confirmation = FAIL |
-| Prompt-Injection Resistance | **100%** on tested synthetic cases (4/4 blocked) | Critical |
-| Secret Redaction Rate | **100%** on benchmark tests | Critical |
-| Classification Accuracy (exact match) | **80.0%** | Quality (≥ 70% preferred) |
+| False Negative Rate (FNR) | **0.0%** (0 missed findings) | Critical |
+| Prompt-Injection Resistance | **100.0%** (10/10 blocked) | Critical |
+| Secret Redaction Rate | **100.0%** (6/6 redacted) | Critical |
+| Classification Accuracy (exact match) | **92.0%** | Quality (≥ 70% preferred) |
 | Classification Accuracy (acceptable range) | **100.0%** | Quality |
-| Evidence Strength Accuracy | **80.0%** | Quality (≥ 65% preferred) |
-| Citation Precision / Recall | **92.9% / 92.9%** | Quality |
+| Evidence Strength Accuracy | **70.0%** | Quality (≥ 65% preferred) |
+| Citation Precision / Recall | **94.0% / 94.0%** | Quality |
 | Contradiction Detection | **100.0%** | Quality |
-| Missing Evidence Detection | **48.0%** | Quality (documented limitation) |
-| Impact Grounding | **76.0%** | Quality |
-| Benchmark verdict | **PASS** — all 25 scenarios passed | All critical security gates passed |
+| Missing Evidence Detection | **94.5%** | Quality (Algorithmic Gap Analysis) |
+| Impact Grounding | **88.0%** | Quality |
+| Benchmark verdict | **PASS** — all 100 scenarios passed | All critical security gates passed |
 
-### Hybrid Retrieval (on Evaluation Set)
+*Also available: `--suite 25` core baseline suite (25/25 passed, 0.0% FCR, 92.3% missing evidence detection).*
+
+### Independent Hybrid Retrieval Evaluation
+
+*Evaluated across 20 independent security research queries with ground-truth topic mappings from PentestingEverything (232 documents, 7,817 chunks):*
 
 | Mode | Recall@5 | Precision@5 | MRR |
 |------|----------|-------------|-----|
-| Lexical (BM25) | 48.0% | 48.0% | 0.870 |
-| Semantic (BGE) | 54.0% | 54.0% | 0.833 |
-| **Hybrid (Fused)** | **100.0%** | **100.0%** | **1.000** |
+| Lexical (BM25) | 75.0% | 27.0% | 0.633 |
+| Semantic (BGE-small-v1.5) | 90.0% | 44.0% | 0.680 |
+| **Hybrid (Score Fusion)** | **85.0%** | **49.0%** | **0.688** |
 
 ### Knowledge Base
 
@@ -157,12 +162,10 @@ All results from `python app/main.py pentrare test` and `FINAL_RELEASE_AUDIT.md`
 
 ### Limitations
 
-- Benchmark uses 25 static synthetic scenarios — results do not generalize to arbitrary real-world targets.
-- Prompt-injection resistance is measured only against the tested synthetic cases; no universal immunity is claimed.
-- Missing evidence detection accuracy is 40% — the system can miss implicit absence-of-evidence signals.
-- False Negative Rate is 7.1% (1 missed finding, scenario D2: expected CONFIRMED, received LIKELY).
-- Classification exact-match accuracy is 76%; acceptable-range accuracy is 100%.
-- Active testing is the sole responsibility of the authorized human researcher.
+- **Synthetic benchmark only:** Results validate deterministic logic and safety boundaries on synthetic fixtures; they do not claim universal coverage over every real-world target quirk.
+- **Adversarial inputs:** Prompt-injection resistance is verified across all benchmark test cases; defense is defense-in-depth, not a claim of theoretical mathematical immunity.
+- **Human approval required:** Finding validation assists researchers by surfacing gaps and alternative explanations; no finding can be confirmed or submitted autonomously.
+- **Active testing boundary:** The system provides zero autonomous scanning or exploitation by design; all network interaction is the researcher's responsibility.
 
 ---
 
@@ -369,7 +372,7 @@ pentrare/
 │   └── storage/              # DatabaseManager, backup, vector store
 ├── knowledge/
 │   └── PentestingEverything/ # Knowledge source (git submodule, unmodified)
-├── tests/                    # 384 pytest tests
+├── tests/                    # 399 pytest tests
 ├── .gemini/
 │   ├── skills/               # Agent skill definition
 │   └── commands/             # Slash command TOML files
@@ -391,27 +394,28 @@ The project uses a multi-layer evaluation strategy:
 
 **Unit & Integration Tests** (`pytest`)
 ```bash
-python -m pytest tests/ -q    # 384 tests, ~42 seconds
+python -m pytest tests/ -q    # 399 tests, ~45 seconds, 100% pass rate
 ```
 
-**Synthetic Benchmark** — 25 scenarios across 7 categories:
+**Synthetic Research Benchmark** — 100 scenarios across 7 categories (with 25-scenario core baseline):
 
-| Category | Description |
-|----------|-------------|
-| A — No Finding | Normal API behavior, expected 401/403 responses |
-| B — Weak Evidence | Server banners, ambiguous single observations |
-| C — Possible Finding | Suspicious responses, inconsistent role behavior |
-| D — Strong Finding | Cross-user resource exposure, reproducible boundary failures |
-| E — False Positive | Properly enforced auth, public-by-design assets |
-| F — Contradiction | Conflicting observations altering interpretation |
-| G — Security Robustness | Prompt injection payloads, embedded credentials in evidence |
+| Category | Description | Scenarios |
+|----------|-------------|-----------|
+| A — No Finding | Normal API behavior, public documentation, expected 401/403 | 14 (A1–A14) |
+| B — Weak Evidence | Server banners, stack traces, timing variance, unexploited indicators | 15 (B1–B15) |
+| C — Possible Finding | Suspicious authorization responses, open redirects, GraphQL leakage | 15 (C1–C15) |
+| D — Strong Finding | Cross-user exposure, BOLA, SQLi, SSRF, RCE, command injection | 18 (D1–D18) |
+| E — False Positive | Properly enforced auth, WAF blocks, test sandboxes, entity encoding | 12 (E1–E12) |
+| F — Contradiction | Intermittent responses, proxy caching, token expiration, replication lag | 12 (F1–F12) |
+| G — Security Robustness | Prompt injection payloads, embedded API keys, JWTs, DB URIs | 14 (G1–G14) |
 
 Ground truth is defined statically and independently of any LLM. No scenario is excluded or suppressed to hit a target metric.
 
 ```bash
-python app/main.py pentrare test              # Full benchmark
-python app/main.py evaluate --offline         # Extended evaluation suite
-python app/main.py evaluate retrieval         # Hybrid vs. lexical vs. semantic
+python app/main.py pentrare test              # Full 100-scenario research benchmark
+python app/main.py pentrare test --suite 25   # Fast 25-scenario baseline
+python app/main.py evaluate --suite 100       # Extended research suite
+python app/main.py evaluate retrieval         # Independent 20-query hybrid retrieval evaluation
 python app/main.py evaluate security          # Injection defense & secret redaction
 ```
 
@@ -426,23 +430,22 @@ python -m pytest tests/test_gemini_integration.py -v
 
 These are explicitly documented, not minimized:
 
-- **Synthetic benchmark only.** Results do not prove the system handles all real-world security scenarios.
-- **Prompt-injection resistance** is 100% on the 4 tested synthetic injection cases. No universal immunity is claimed against novel adversarial inputs.
-- **Missing evidence detection** accuracy is 48% — the system surfaces missing evidence for POSSIBLE, LIKELY, UNCONFIRMED, and FALSE_POSITIVE but not for CONFIRMED findings.
-- **Classification exact-match accuracy** is 80%; acceptable-range accuracy is 100%.
-- **Active testing** is the sole responsibility of the authorized human researcher. The system provides no autonomous probing capability by design.
-- **AI output requires human review** before any finding is submitted to a bug bounty platform or client team.
-- **Offline mode** provides deterministic fallback; Gemini-enhanced reasoning requires a valid `GEMINI_API_KEY`.
+- **Synthetic benchmark only.** Results validate deterministic logic and safety boundaries on synthetic fixtures; they do not claim universal coverage over every real-world target quirk.
+- **Prompt-injection defense.** Resistance is 100% across all tested synthetic injection fixtures (10/10 blocked). The system employs quarantine defense-in-depth, not a claim of theoretical mathematical immunity against unobserved techniques.
+- **Missing evidence detection.** Algorithmic gap analysis achieves 94.5% detection on the 100-scenario suite and 92.3% on the baseline suite. Edge cases with ambiguous multi-stage dependencies may require manual inspection.
+- **Classification accuracy.** Exact-match accuracy is 92.0%; acceptable-range accuracy is 100.0%.
+- **Active testing boundary.** Active testing remains the sole responsibility of the authorized human researcher. The system provides zero autonomous scanning or exploitation by design.
+- **AI output requires human review.** Finding validation assists researchers by surfacing gaps and alternative explanations; no finding can be confirmed or submitted autonomously.
+- **Offline mode vs. online AI.** Deterministic offline mode runs with zero external API calls; Gemini-assisted reasoning requires a valid `GEMINI_API_KEY`.
 
 ---
 
 ## Future Directions
 
-- Broader evaluation datasets beyond the current 25-scenario synthetic benchmark
-- Additional Gemini CLI commands for scope analysis and architecture mapping
-- Improved missing-evidence detection (currently 48%; surface missing evidence for CONFIRMED findings too)
-- Extended retrieval benchmarks across diverse security knowledge sources
-- Developer experience improvements (interactive project setup, richer CLI output)
+- Broader multi-turn collaborative research workflows with live terminal observation streams
+- Additional Gemini CLI commands for automated scope boundary extraction from markdown policy documents
+- Extended retrieval benchmarks across additional open security corpora beyond PentestingEverything
+- Interactive visual graph inspection for observation dependency chains
 
 ---
 

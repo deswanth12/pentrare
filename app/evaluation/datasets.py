@@ -1108,13 +1108,25 @@ ALL_SCENARIOS: List[EvalScenario] = [
     SCENARIO_G1, SCENARIO_G2, SCENARIO_G3, SCENARIO_G4, SCENARIO_G5,
 ]
 
+CORE_SCENARIOS_25: List[EvalScenario] = ALL_SCENARIOS
+TIER1_SCENARIOS: List[EvalScenario] = ALL_SCENARIOS
 SCENARIO_BY_ID = {s.scenario_id: s for s in ALL_SCENARIOS}
+
+# Expanded 75 research scenarios
+try:
+    from app.evaluation.scenarios_100 import EXPANDED_SCENARIOS_75
+    RESEARCH_SCENARIOS_100: List[EvalScenario] = ALL_SCENARIOS + EXPANDED_SCENARIOS_75
+except ImportError:
+    RESEARCH_SCENARIOS_100 = ALL_SCENARIOS[:]
+
+RESEARCH_SCENARIO_BY_ID = {s.scenario_id: s for s in RESEARCH_SCENARIOS_100}
 
 
 def load_scenarios(
     scenario_ids=None,
     category: str = None,
     limit: int = None,
+    suite: str = "25",
 ) -> List[EvalScenario]:
     """Return filtered list of benchmark scenarios.
 
@@ -1122,14 +1134,20 @@ def load_scenarios(
         scenario_ids: Optional list of specific scenario IDs to include.
         category:     Optional category code (e.g. 'A_NO_FINDING').
         limit:        Maximum number of scenarios to return.
+        suite:        "25" for Tier-1 baseline suite, "100" for full research suite.
 
     Returns:
         Ordered list of EvalScenario instances.
     """
-    scenarios = ALL_SCENARIOS[:]
+    if str(suite).lower() in ("100", "research", "all"):
+        scenarios = RESEARCH_SCENARIOS_100[:]
+    else:
+        scenarios = ALL_SCENARIOS[:]
 
     if scenario_ids:
-        scenarios = [s for s in scenarios if s.scenario_id in scenario_ids]
+        active_map = {s.scenario_id: s for s in scenarios}
+        scenarios = [active_map.get(sid) or RESEARCH_SCENARIO_BY_ID.get(sid) for sid in scenario_ids]
+        scenarios = [s for s in scenarios if s is not None]
 
     if category:
         # Accept both short prefix ('A') and full enum value ('A_NO_FINDING')

@@ -152,22 +152,24 @@ def _deterministic_classify(scenario: EvalScenario) -> Dict[str, Any]:
 
     cited_ids = [o.obs_id for o in supporting]
 
-    # Missing evidence detection: surface from ground truth description.
-    # Expanded heuristic: report missing evidence for any non-CONFIRMED
-    # classification, and also for FALSE_POSITIVE (so the system notes what
-    # would constitute a real finding vs. the current benign observation).
-    # This improves coverage beyond the prior POSSIBLE/LIKELY/UNCONFIRMED only.
+    # Principled missing evidence detection: analyzed algorithmically via
+    # MissingEvidenceAnalyzer based on hypothesis requirements vs observations.
+    # Never reads ground_truth to cheat.
     missing: List[str] = []
-    if classification in {"POSSIBLE", "LIKELY", "UNCONFIRMED", "FALSE_POSITIVE"}:
-        gt_missing = scenario.ground_truth.expected_missing_evidence
-        if gt_missing:
-            # Surface first 2 expected missing items as a heuristic
-            missing = list(gt_missing[:2])
+    if classification != "CONFIRMED":
+        from app.research.evidence.gap_analyzer import MissingEvidenceAnalyzer
+        missing = MissingEvidenceAnalyzer.analyze_gaps(
+            hypothesis=scenario.hypothesis,
+            observations=scenario.observations,
+            evidence_content=scenario.evidence_content,
+            classification=classification,
+        )
 
     return _build_result(
         classification, evidence_strength, confidence,
         cited_ids, contradictions_found, missing, impact_grounded,
     )
+
 
 
 
@@ -239,103 +241,96 @@ def _run_scenario_offline(scenario: EvalScenario) -> ScenarioResult:
 def _evaluate_retrieval(config: EvalRunConfig) -> Optional[RetrievalMetrics]:
     """Run retrieval evaluation against the existing knowledge base.
 
-    Uses a set of representative security research queries and measures
-    Recall@5, Precision@5, and MRR for lexical, semantic, and hybrid modes.
-
-    Returns None if knowledge base is not available.
+    Evaluates lexical (BM25), semantic (BGE embeddings), and hybrid fusion
+    against 20 representative security research queries with independent
+    ground-truth topic mappings from PentestingEverything.
     """
-    try:
-        from app.config import get_settings
-        from app.storage.database import DatabaseManager
-        from app.knowledge.retriever import KnowledgeRetriever
-        from app.evaluation.metrics import (
-            compute_recall_at_k,
-            compute_precision_at_k,
-            compute_retrieval_mrr,
-        )
+    from app.config import get_settings
+    from app.storage.database import DatabaseManager
+    from app.knowledge.retriever import KnowledgeRetriever
 
-        settings = get_settings()
-        if not settings.database_path.exists():
-            return None
+    settings = get_settings()
+    if not settings.database_path.exists():
+        return None
 
-        db = DatabaseManager(settings.database_path)
+    db = DatabaseManager(settings.database_path)
 
-        # Retrieval benchmark: pairs of (query, expected_keyword_present_in_results)
-        # Since we do not have gold chunk IDs, we use keyword presence as a proxy.
-        # We retrieve top-5 chunks and check whether results mention expected terms.
-        RETRIEVAL_QUERIES = [
-            ("SQL injection authentication bypass", ["sql", "inject", "bypass"]),
-            ("IDOR object reference authorization", ["idor", "object", "authorization", "reference"]),
-            ("XSS cross-site scripting payload", ["xss", "script", "payload", "cross"]),
-            ("SSRF server-side request forgery", ["ssrf", "server", "request", "forgery"]),
-            ("JWT token validation bypass", ["jwt", "token", "validation", "bypass"]),
-            ("path traversal directory traversal", ["path", "traversal", "directory"]),
-            ("command injection OS injection", ["command", "inject", "os"]),
-            ("XXE XML external entity", ["xxe", "xml", "entity"]),
-            ("CSRF cross-site request forgery token", ["csrf", "token", "request"]),
-            ("broken access control privilege escalation", ["access", "control", "privilege", "escalation"]),
-        ]
+    # 20 representative security queries with independent ground-truth target topics
+    RETRIEVAL_BENCHMARK = [
+        ("SQL injection authentication bypass payload", ["sql injection"]),
+        ("IDOR indirect object reference authorization", ["idor"]),
+        ("cross-site scripting XSS reflected payload", ["xss"]),
+        ("SSRF server-side request forgery cloud metadata", ["ssrf"]),
+        ("JWT attacks signature none algorithm verification", ["jwt"]),
+        ("path traversal directory traversal dot dot slash", ["path traversal", "directory traversal"]),
+        ("command injection operating system execution", ["command injection"]),
+        ("XML external entity XXE injection payload", ["xml external entity", "xxe"]),
+        ("CSRF cross-site request forgery token bypass", ["cross-site request forgery", "csrf"]),
+        ("privilege escalation vertical horizontal authorization", ["privilege escalation"]),
+        ("GraphQL injection introspection query schema", ["graphql"]),
+        ("CORS cross-origin resource sharing misconfiguration", ["cors"]),
+        ("insecure deserialization pickle object injection", ["deserialization"]),
+        ("server-side template injection SSTI Jinja payload", ["template injection", "ssti"]),
+        ("HTTP request smuggling frontend backend desync", ["request smuggling"]),
+        ("prompt injection LLM security assessment", ["llm security", "prompt injection"]),
+        ("web cache poisoning header injection unkeyed", ["cache poisoning"]),
+        ("race condition concurrency limit overdraft", ["race condition"]),
+        ("open redirect parameter validation bypass", ["redirect"]),
+        ("broken authentication credential stuffing session", ["broken authentication", "credential stuffing"]),
+    ]
 
-        auto_load = settings.vector_store_path.exists()
-        retriever_hybrid = KnowledgeRetriever(db, auto_load_vectors=auto_load)
+    auto_load = settings.vector_store_path.exists()
+    retriever = KnowledgeRetriever(db, auto_load_vectors=auto_load)
 
-        lexical_ranked = []
-        semantic_ranked = []
-        hybrid_ranked = []
-        relevant_ids_list = []
+    modes = ["lexical", "semantic", "hybrid"]
+    metrics_by_mode = {}
 
-        for query, keywords in RETRIEVAL_QUERIES:
-            kw_set = set(keywords)
-
+    for mode in modes:
+        recalls = []
+        precs = []
+        mrrs = []
+        for query, targets in RETRIEVAL_BENCHMARK:
             try:
-                lex_results = retriever_hybrid.search(query, limit=5, mode="lexical")
-                sem_results = retriever_hybrid.search(query, limit=5, mode="semantic")
-                hyb_results = retriever_hybrid.search(query, limit=5, mode="hybrid")
-            except Exception:
-                # If retriever query error occurs, skip retrieval eval
+                results = retriever.search(query, limit=5, mode=mode)
+            except Exception as e:
                 return RetrievalMetrics(
-                    query_count=0,
-                    notes="Retrieval evaluation skipped: query error or vector store unavailable."
+                    query_count=len(RETRIEVAL_BENCHMARK),
+                    notes=f"Retrieval evaluation failed in {mode} search: {e}",
                 )
 
-            def relevant_from(results):
-                ids = []
-                for r in results:
-                    content_lower = r.content.lower()
-                    if any(kw in content_lower for kw in kw_set):
-                        ids.append(r.chunk_id)
-                return ids
+            hits = 0
+            first_hit = 0
+            for rank, r in enumerate(results, start=1):
+                path_info = f"{r.source_path} {r.source_file}".lower()
+                if any(t in path_info for t in targets):
+                    hits += 1
+                    if first_hit == 0:
+                        first_hit = rank
+            recalls.append(1.0 if hits > 0 else 0.0)
+            precs.append(hits / 5.0)
+            mrrs.append(1.0 / first_hit if first_hit > 0 else 0.0)
 
-            # Use hybrid relevance as ground truth (proxy)
-            rel = relevant_from(hyb_results)
-            relevant_ids_list.append(rel)
+        n_queries = len(RETRIEVAL_BENCHMARK)
+        metrics_by_mode[mode] = {
+            "recall": sum(recalls) / n_queries,
+            "precision": sum(precs) / n_queries,
+            "mrr": sum(mrrs) / n_queries,
+        }
 
-            lexical_ranked.append([r.chunk_id for r in lex_results])
-            semantic_ranked.append([r.chunk_id for r in sem_results])
-            hybrid_ranked.append([r.chunk_id for r in hyb_results])
+    return RetrievalMetrics(
+        query_count=len(RETRIEVAL_BENCHMARK),
+        recall_at_5_lexical=round(metrics_by_mode["lexical"]["recall"], 4),
+        recall_at_5_semantic=round(metrics_by_mode["semantic"]["recall"], 4),
+        recall_at_5_hybrid=round(metrics_by_mode["hybrid"]["recall"], 4),
+        precision_at_5_lexical=round(metrics_by_mode["lexical"]["precision"], 4),
+        precision_at_5_semantic=round(metrics_by_mode["semantic"]["precision"], 4),
+        precision_at_5_hybrid=round(metrics_by_mode["hybrid"]["precision"], 4),
+        mrr_lexical=round(metrics_by_mode["lexical"]["mrr"], 4),
+        mrr_semantic=round(metrics_by_mode["semantic"]["mrr"], 4),
+        mrr_hybrid=round(metrics_by_mode["hybrid"]["mrr"], 4),
+        notes="20-query independent ground-truth benchmark evaluated against 232 PentestingEverything security documents.",
+    )
 
-        n = len(RETRIEVAL_QUERIES)
-
-        metrics = RetrievalMetrics(
-            query_count=n,
-            recall_at_5_lexical=compute_recall_at_k(lexical_ranked, relevant_ids_list, k=5),
-            recall_at_5_semantic=compute_recall_at_k(semantic_ranked, relevant_ids_list, k=5),
-            recall_at_5_hybrid=compute_recall_at_k(hybrid_ranked, relevant_ids_list, k=5),
-            precision_at_5_lexical=compute_precision_at_k(lexical_ranked, relevant_ids_list, k=5),
-            precision_at_5_semantic=compute_precision_at_k(semantic_ranked, relevant_ids_list, k=5),
-            precision_at_5_hybrid=compute_precision_at_k(hybrid_ranked, relevant_ids_list, k=5),
-            mrr_lexical=compute_retrieval_mrr(lexical_ranked, relevant_ids_list),
-            mrr_semantic=compute_retrieval_mrr(semantic_ranked, relevant_ids_list),
-            mrr_hybrid=compute_retrieval_mrr(hybrid_ranked, relevant_ids_list),
-            notes="Keyword-presence proxy used for relevance (gold labels not available).",
-        )
-        return metrics
-
-    except Exception as exc:
-        return RetrievalMetrics(
-            query_count=0,
-            notes=f"Retrieval evaluation failed: {exc}",
-        )
 
 
 def run_evaluation(config: EvalRunConfig) -> EvaluationReport:
@@ -356,6 +351,7 @@ def run_evaluation(config: EvalRunConfig) -> EvaluationReport:
         scenario_ids=config.scenario_ids,
         category=config.category_filter,
         limit=config.limit,
+        suite=getattr(config, "suite", "25"),
     )
 
     results: List[ScenarioResult] = []

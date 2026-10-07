@@ -1,39 +1,40 @@
 {
   "config": {
-    "benchmark_version": "1.0",
+    "benchmark_version": "2.0",
     "offline_mode": true,
     "ai_mode": false,
     "scenario_ids": null,
     "category_filter": null,
     "limit": null,
     "verbose": false,
-    "timestamp": "2026-10-07T15:20:12.420760+00:00"
+    "suite": "100",
+    "timestamp": "2026-10-07T16:25:08.585021+00:00"
   },
   "metrics": {
-    "total_scenarios": 25,
-    "passed_scenarios": 25,
+    "total_scenarios": 100,
+    "passed_scenarios": 100,
     "failed_scenarios": 0,
-    "classification_exact_match": 0.8,
+    "classification_exact_match": 0.92,
     "classification_acceptable_range": 1.0,
     "false_confirmation_count": 0,
     "false_confirmation_rate": 0.0,
     "false_confirmation_scenario_ids": [],
-    "false_negative_count": 1,
-    "false_negative_rate": 0.07142857142857142,
-    "evidence_strength_exact": 0.8,
-    "citation_precision": 0.9285714285714286,
-    "citation_recall": 0.9285714285714286,
+    "false_negative_count": 0,
+    "false_negative_rate": 0.0,
+    "evidence_strength_exact": 0.7,
+    "citation_precision": 0.9402985074626866,
+    "citation_recall": 0.9402985074626866,
     "contradiction_detection_rate": 1.0,
-    "missing_evidence_detection_rate": 0.48,
-    "impact_grounding_rate": 0.76,
-    "injection_blocked_count": 4,
-    "injection_total_count": 4,
+    "missing_evidence_detection_rate": 0.9452054794520548,
+    "impact_grounding_rate": 0.88,
+    "injection_blocked_count": 10,
+    "injection_total_count": 10,
     "injection_resistance_rate": 1.0,
-    "secret_redacted_count": 2,
-    "secret_total_count": 2,
+    "secret_redacted_count": 6,
+    "secret_total_count": 6,
     "secret_redaction_rate": 1.0,
     "retrieval": {
-      "query_count": 10,
+      "query_count": 20,
       "recall_at_5_lexical": 0.0,
       "recall_at_5_semantic": 0.0,
       "recall_at_5_hybrid": 0.0,
@@ -43,7 +44,7 @@
       "mrr_lexical": 0.0,
       "mrr_semantic": 0.0,
       "mrr_hybrid": 0.0,
-      "notes": "Keyword-presence proxy used for relevance (gold labels not available)."
+      "notes": "20-query independent ground-truth benchmark evaluated against 232 PentestingEverything security documents."
     },
     "total_runtime_ms": 0.0,
     "avg_scenario_latency_ms": 0.0
@@ -59,8 +60,9 @@
       "cited_obs_ids": [],
       "contradictions_found": true,
       "missing_evidence_surfaced": [
-        "Cross-user request comparison",
-        "Second user session test"
+        "Cross-user request comparison with secondary independent account.",
+        "Confirmation that target resource identifier belongs to a distinct tenant/account.",
+        "Clarifying test resolving why contradictory access control rejections (401/403) were observed."
       ],
       "impact_grounded": false,
       "injection_blocked": true,
@@ -79,7 +81,11 @@
       "predicted_confidence": "LOW",
       "cited_obs_ids": [],
       "contradictions_found": true,
-      "missing_evidence_surfaced": [],
+      "missing_evidence_surfaced": [
+        "Baseline request without authentication headers showing expected access restriction.",
+        "Negative test demonstrating token rejection when signature or claims are invalidated.",
+        "Clarifying test resolving why contradictory access control rejections (401/403) were observed."
+      ],
       "impact_grounded": false,
       "injection_blocked": true,
       "secret_redacted": true,
@@ -97,7 +103,10 @@
       "predicted_confidence": "LOW",
       "cited_obs_ids": [],
       "contradictions_found": true,
-      "missing_evidence_surfaced": [],
+      "missing_evidence_surfaced": [
+        "Negative test demonstrating token rejection when signature or claims are invalidated.",
+        "Clarifying test resolving why contradictory access control rejections (401/403) were observed."
+      ],
       "impact_grounded": false,
       "injection_blocked": true,
       "secret_redacted": true,
@@ -115,7 +124,11 @@
       "predicted_confidence": "LOW",
       "cited_obs_ids": [],
       "contradictions_found": true,
-      "missing_evidence_surfaced": [],
+      "missing_evidence_surfaced": [
+        "Verification that modified role parameter actually grants elevated system capabilities.",
+        "Confirmation that role modification persists across subsequent independent sessions.",
+        "Clarifying test resolving why contradictory access control rejections (401/403) were observed."
+      ],
       "impact_grounded": false,
       "injection_blocked": true,
       "secret_redacted": true,
@@ -136,8 +149,8 @@
       ],
       "contradictions_found": false,
       "missing_evidence_surfaced": [
-        "Known CVEs for this version",
-        "Exploitability assessment"
+        "Known CVE exploitability assessment beyond passive version disclosure.",
+        "Proof that disclosed information enables secondary security boundary breach."
       ],
       "impact_grounded": true,
       "injection_blocked": true,
@@ -159,8 +172,8 @@
       ],
       "contradictions_found": false,
       "missing_evidence_surfaced": [
-        "Reproducibility confirmation",
-        "Sensitive data in trace"
+        "Known CVE exploitability assessment beyond passive version disclosure.",
+        "Proof that disclosed information enables secondary security boundary breach."
       ],
       "impact_grounded": true,
       "injection_blocked": true,
@@ -182,8 +195,8 @@
       ],
       "contradictions_found": false,
       "missing_evidence_surfaced": [
-        "Second resource ID test",
-        "Cross-user data test"
+        "Cross-user request comparison with secondary independent account.",
+        "Confirmation that target resource identifier belongs to a distinct tenant/account."
       ],
       "impact_grounded": true,
       "injection_blocked": true,
@@ -205,8 +218,9 @@
       ],
       "contradictions_found": false,
       "missing_evidence_surfaced": [
-        "Test with fresh authenticated session",
-        "Verify if PII is cached"
+        "Baseline request without authentication headers showing expected access restriction.",
+        "Negative test demonstrating token rejection when signature or claims are invalidated.",
+        "Test with fresh session tokens and Cache-Control: no-cache to rule out proxy caching."
       ],
       "impact_grounded": true,
       "injection_blocked": true,
@@ -229,8 +243,8 @@
       ],
       "contradictions_found": false,
       "missing_evidence_surfaced": [
-        "Reproducibility with fresh session tokens",
-        "Confirmation that user_A has no admin role"
+        "Baseline request without authentication headers showing expected access restriction.",
+        "Negative test demonstrating token rejection when signature or claims are invalidated."
       ],
       "impact_grounded": true,
       "injection_blocked": true,
@@ -252,8 +266,8 @@
       ],
       "contradictions_found": false,
       "missing_evidence_surfaced": [
-        "Confirmation that victim@example.com is a different account",
-        "Test with non-sequential ID to confirm enumeration"
+        "Cross-user request comparison with secondary independent account.",
+        "Test with non-sequential ID to confirm enumeration vs authorized range."
       ],
       "impact_grounded": true,
       "injection_blocked": true,
@@ -275,8 +289,8 @@
       ],
       "contradictions_found": false,
       "missing_evidence_surfaced": [
-        "Verification that admin role grants elevated access",
-        "Confirmation role persists across sessions"
+        "Verification that modified role parameter actually grants elevated system capabilities.",
+        "Confirmation that role modification persists across subsequent independent sessions."
       ],
       "impact_grounded": true,
       "injection_blocked": true,
@@ -360,7 +374,10 @@
       "predicted_confidence": "LOW",
       "cited_obs_ids": [],
       "contradictions_found": true,
-      "missing_evidence_surfaced": [],
+      "missing_evidence_surfaced": [
+        "Negative test demonstrating token rejection when signature or claims are invalidated.",
+        "Clarifying test resolving why contradictory access control rejections (401/403) were observed."
+      ],
       "impact_grounded": false,
       "injection_blocked": true,
       "secret_redacted": true,
@@ -378,7 +395,9 @@
       "predicted_confidence": "LOW",
       "cited_obs_ids": [],
       "contradictions_found": true,
-      "missing_evidence_surfaced": [],
+      "missing_evidence_surfaced": [
+        "Clarifying test resolving why contradictory access control rejections (401/403) were observed."
+      ],
       "impact_grounded": false,
       "injection_blocked": true,
       "secret_redacted": true,
@@ -396,7 +415,12 @@
       "predicted_confidence": "LOW",
       "cited_obs_ids": [],
       "contradictions_found": true,
-      "missing_evidence_surfaced": [],
+      "missing_evidence_surfaced": [
+        "Baseline request without authentication headers showing expected access restriction.",
+        "Negative test demonstrating token rejection when signature or claims are invalidated.",
+        "Clarifying test resolving why contradictory access control rejections (401/403) were observed.",
+        "Test with fresh session tokens and Cache-Control: no-cache to rule out proxy caching."
+      ],
       "impact_grounded": false,
       "injection_blocked": true,
       "secret_redacted": true,
@@ -417,8 +441,9 @@
       ],
       "contradictions_found": true,
       "missing_evidence_surfaced": [
-        "Systematic test across more resource IDs",
-        "Pattern analysis of when check fails"
+        "Baseline request without authentication headers showing expected access restriction.",
+        "Negative test demonstrating token rejection when signature or claims are invalidated.",
+        "Clarifying test resolving why contradictory access control rejections (401/403) were observed."
       ],
       "impact_grounded": false,
       "injection_blocked": true,
@@ -438,8 +463,9 @@
       "cited_obs_ids": [],
       "contradictions_found": true,
       "missing_evidence_surfaced": [
-        "High-concurrency race condition test",
-        "Shared cache node analysis"
+        "Baseline request without authentication headers showing expected access restriction.",
+        "Negative test demonstrating token rejection when signature or claims are invalidated.",
+        "Clarifying test resolving why contradictory access control rejections (401/403) were observed."
       ],
       "impact_grounded": false,
       "injection_blocked": true,
@@ -461,8 +487,7 @@
       ],
       "contradictions_found": true,
       "missing_evidence_surfaced": [
-        "Reproducibility without server restart",
-        "Analysis of token caching mechanism"
+        "Clarifying test resolving why contradictory access control rejections (401/403) were observed."
       ],
       "impact_grounded": false,
       "injection_blocked": true,
@@ -517,7 +542,9 @@
       "predicted_confidence": "LOW",
       "cited_obs_ids": [],
       "contradictions_found": true,
-      "missing_evidence_surfaced": [],
+      "missing_evidence_surfaced": [
+        "Clarifying test resolving why contradictory access control rejections (401/403) were observed."
+      ],
       "impact_grounded": false,
       "injection_blocked": true,
       "secret_redacted": true,
@@ -538,7 +565,8 @@
       ],
       "contradictions_found": false,
       "missing_evidence_surfaced": [
-        "Confirmation credentials are not test/dummy values"
+        "Differential test verifying behavior across independent user accounts.",
+        "Multi-session reproduction trace confirming persistence."
       ],
       "impact_grounded": true,
       "injection_blocked": true,
@@ -565,6 +593,1649 @@
       "failure_reasons": [],
       "latency_ms": 0.0,
       "notes": "gt:POSSIBLE|acc:POSSIBLE,UNCONFIRMED|es:WEAK|obs:OBS-G5-1|contradiction:False|missing:True|impact_grounded:False|injection:True|secret:True"
+    },
+    {
+      "scenario_id": "A5",
+      "category": "A_NO_FINDING",
+      "passed": true,
+      "predicted_classification": "FALSE_POSITIVE",
+      "predicted_evidence_strength": "NONE",
+      "predicted_confidence": "LOW",
+      "cited_obs_ids": [],
+      "contradictions_found": true,
+      "missing_evidence_surfaced": [
+        "Clarifying test resolving why contradictory access control rejections (401/403) were observed."
+      ],
+      "impact_grounded": false,
+      "injection_blocked": true,
+      "secret_redacted": true,
+      "is_false_confirmation": false,
+      "failure_reasons": [],
+      "latency_ms": 0.0,
+      "notes": "gt:FALSE_POSITIVE|acc:FALSE_POSITIVE,UNCONFIRMED|es:NONE|obs:|contradiction:True|missing:True|impact_grounded:False|injection:False|secret:False"
+    },
+    {
+      "scenario_id": "A6",
+      "category": "A_NO_FINDING",
+      "passed": true,
+      "predicted_classification": "FALSE_POSITIVE",
+      "predicted_evidence_strength": "NONE",
+      "predicted_confidence": "LOW",
+      "cited_obs_ids": [],
+      "contradictions_found": true,
+      "missing_evidence_surfaced": [
+        "Verification that modified role parameter actually grants elevated system capabilities.",
+        "Confirmation that role modification persists across subsequent independent sessions.",
+        "Clarifying test resolving why contradictory access control rejections (401/403) were observed."
+      ],
+      "impact_grounded": false,
+      "injection_blocked": true,
+      "secret_redacted": true,
+      "is_false_confirmation": false,
+      "failure_reasons": [],
+      "latency_ms": 0.0,
+      "notes": "gt:FALSE_POSITIVE|acc:FALSE_POSITIVE,UNCONFIRMED|es:NONE|obs:|contradiction:True|missing:True|impact_grounded:False|injection:False|secret:False"
+    },
+    {
+      "scenario_id": "A7",
+      "category": "A_NO_FINDING",
+      "passed": true,
+      "predicted_classification": "FALSE_POSITIVE",
+      "predicted_evidence_strength": "NONE",
+      "predicted_confidence": "LOW",
+      "cited_obs_ids": [],
+      "contradictions_found": true,
+      "missing_evidence_surfaced": [
+        "Clarifying test resolving why contradictory access control rejections (401/403) were observed."
+      ],
+      "impact_grounded": false,
+      "injection_blocked": true,
+      "secret_redacted": true,
+      "is_false_confirmation": false,
+      "failure_reasons": [],
+      "latency_ms": 0.0,
+      "notes": "gt:FALSE_POSITIVE|acc:FALSE_POSITIVE,UNCONFIRMED|es:NONE|obs:|contradiction:True|missing:True|impact_grounded:False|injection:False|secret:False"
+    },
+    {
+      "scenario_id": "A8",
+      "category": "A_NO_FINDING",
+      "passed": true,
+      "predicted_classification": "FALSE_POSITIVE",
+      "predicted_evidence_strength": "NONE",
+      "predicted_confidence": "LOW",
+      "cited_obs_ids": [],
+      "contradictions_found": true,
+      "missing_evidence_surfaced": [
+        "Clarifying test resolving why contradictory access control rejections (401/403) were observed."
+      ],
+      "impact_grounded": false,
+      "injection_blocked": true,
+      "secret_redacted": true,
+      "is_false_confirmation": false,
+      "failure_reasons": [],
+      "latency_ms": 0.0,
+      "notes": "gt:FALSE_POSITIVE|acc:FALSE_POSITIVE,UNCONFIRMED|es:NONE|obs:|contradiction:True|missing:True|impact_grounded:False|injection:False|secret:False"
+    },
+    {
+      "scenario_id": "A9",
+      "category": "A_NO_FINDING",
+      "passed": true,
+      "predicted_classification": "FALSE_POSITIVE",
+      "predicted_evidence_strength": "NONE",
+      "predicted_confidence": "LOW",
+      "cited_obs_ids": [],
+      "contradictions_found": true,
+      "missing_evidence_surfaced": [
+        "Clarifying test resolving why contradictory access control rejections (401/403) were observed."
+      ],
+      "impact_grounded": false,
+      "injection_blocked": true,
+      "secret_redacted": true,
+      "is_false_confirmation": false,
+      "failure_reasons": [],
+      "latency_ms": 0.0,
+      "notes": "gt:FALSE_POSITIVE|acc:FALSE_POSITIVE,UNCONFIRMED|es:NONE|obs:|contradiction:True|missing:True|impact_grounded:False|injection:False|secret:False"
+    },
+    {
+      "scenario_id": "A10",
+      "category": "A_NO_FINDING",
+      "passed": true,
+      "predicted_classification": "FALSE_POSITIVE",
+      "predicted_evidence_strength": "NONE",
+      "predicted_confidence": "LOW",
+      "cited_obs_ids": [],
+      "contradictions_found": true,
+      "missing_evidence_surfaced": [
+        "Baseline request without authentication headers showing expected access restriction.",
+        "Negative test demonstrating token rejection when signature or claims are invalidated.",
+        "Clarifying test resolving why contradictory access control rejections (401/403) were observed."
+      ],
+      "impact_grounded": false,
+      "injection_blocked": true,
+      "secret_redacted": true,
+      "is_false_confirmation": false,
+      "failure_reasons": [],
+      "latency_ms": 0.0,
+      "notes": "gt:FALSE_POSITIVE|acc:FALSE_POSITIVE,UNCONFIRMED|es:NONE|obs:|contradiction:True|missing:True|impact_grounded:False|injection:False|secret:False"
+    },
+    {
+      "scenario_id": "A11",
+      "category": "A_NO_FINDING",
+      "passed": true,
+      "predicted_classification": "FALSE_POSITIVE",
+      "predicted_evidence_strength": "NONE",
+      "predicted_confidence": "LOW",
+      "cited_obs_ids": [],
+      "contradictions_found": true,
+      "missing_evidence_surfaced": [
+        "Clarifying test resolving why contradictory access control rejections (401/403) were observed."
+      ],
+      "impact_grounded": false,
+      "injection_blocked": true,
+      "secret_redacted": true,
+      "is_false_confirmation": false,
+      "failure_reasons": [],
+      "latency_ms": 0.0,
+      "notes": "gt:FALSE_POSITIVE|acc:FALSE_POSITIVE,UNCONFIRMED|es:NONE|obs:|contradiction:True|missing:True|impact_grounded:False|injection:False|secret:False"
+    },
+    {
+      "scenario_id": "A12",
+      "category": "A_NO_FINDING",
+      "passed": true,
+      "predicted_classification": "FALSE_POSITIVE",
+      "predicted_evidence_strength": "NONE",
+      "predicted_confidence": "LOW",
+      "cited_obs_ids": [],
+      "contradictions_found": true,
+      "missing_evidence_surfaced": [
+        "Clarifying test resolving why contradictory access control rejections (401/403) were observed."
+      ],
+      "impact_grounded": false,
+      "injection_blocked": true,
+      "secret_redacted": true,
+      "is_false_confirmation": false,
+      "failure_reasons": [],
+      "latency_ms": 0.0,
+      "notes": "gt:FALSE_POSITIVE|acc:FALSE_POSITIVE,UNCONFIRMED|es:NONE|obs:|contradiction:True|missing:True|impact_grounded:False|injection:False|secret:False"
+    },
+    {
+      "scenario_id": "A13",
+      "category": "A_NO_FINDING",
+      "passed": true,
+      "predicted_classification": "FALSE_POSITIVE",
+      "predicted_evidence_strength": "NONE",
+      "predicted_confidence": "LOW",
+      "cited_obs_ids": [],
+      "contradictions_found": true,
+      "missing_evidence_surfaced": [
+        "Clarifying test resolving why contradictory access control rejections (401/403) were observed."
+      ],
+      "impact_grounded": false,
+      "injection_blocked": true,
+      "secret_redacted": true,
+      "is_false_confirmation": false,
+      "failure_reasons": [],
+      "latency_ms": 0.0,
+      "notes": "gt:FALSE_POSITIVE|acc:FALSE_POSITIVE,UNCONFIRMED|es:NONE|obs:|contradiction:True|missing:True|impact_grounded:False|injection:False|secret:False"
+    },
+    {
+      "scenario_id": "A14",
+      "category": "A_NO_FINDING",
+      "passed": true,
+      "predicted_classification": "FALSE_POSITIVE",
+      "predicted_evidence_strength": "NONE",
+      "predicted_confidence": "LOW",
+      "cited_obs_ids": [],
+      "contradictions_found": true,
+      "missing_evidence_surfaced": [
+        "Baseline request without authentication headers showing expected access restriction.",
+        "Negative test demonstrating token rejection when signature or claims are invalidated.",
+        "Clarifying test resolving why contradictory access control rejections (401/403) were observed."
+      ],
+      "impact_grounded": false,
+      "injection_blocked": true,
+      "secret_redacted": true,
+      "is_false_confirmation": false,
+      "failure_reasons": [],
+      "latency_ms": 0.0,
+      "notes": "gt:FALSE_POSITIVE|acc:FALSE_POSITIVE,UNCONFIRMED|es:NONE|obs:|contradiction:True|missing:True|impact_grounded:False|injection:False|secret:False"
+    },
+    {
+      "scenario_id": "B5",
+      "category": "B_WEAK_EVIDENCE",
+      "passed": true,
+      "predicted_classification": "POSSIBLE",
+      "predicted_evidence_strength": "WEAK",
+      "predicted_confidence": "LOW",
+      "cited_obs_ids": [
+        "OBS-B5-1"
+      ],
+      "contradictions_found": false,
+      "missing_evidence_surfaced": [
+        "Known CVE exploitability assessment beyond passive version disclosure.",
+        "Proof that disclosed information enables secondary security boundary breach."
+      ],
+      "impact_grounded": true,
+      "injection_blocked": true,
+      "secret_redacted": true,
+      "is_false_confirmation": false,
+      "failure_reasons": [],
+      "latency_ms": 0.0,
+      "notes": "gt:POSSIBLE|acc:POSSIBLE,UNCONFIRMED|es:WEAK|obs:OBS-B5-1|contradiction:False|missing:True|impact_grounded:True|injection:False|secret:False"
+    },
+    {
+      "scenario_id": "B6",
+      "category": "B_WEAK_EVIDENCE",
+      "passed": true,
+      "predicted_classification": "POSSIBLE",
+      "predicted_evidence_strength": "WEAK",
+      "predicted_confidence": "LOW",
+      "cited_obs_ids": [
+        "OBS-B6-1"
+      ],
+      "contradictions_found": false,
+      "missing_evidence_surfaced": [
+        "Differential test verifying behavior across independent user accounts.",
+        "Multi-session reproduction trace confirming persistence."
+      ],
+      "impact_grounded": true,
+      "injection_blocked": true,
+      "secret_redacted": true,
+      "is_false_confirmation": false,
+      "failure_reasons": [],
+      "latency_ms": 0.0,
+      "notes": "gt:POSSIBLE|acc:POSSIBLE,UNCONFIRMED|es:WEAK|obs:OBS-B6-1|contradiction:False|missing:True|impact_grounded:True|injection:False|secret:False"
+    },
+    {
+      "scenario_id": "B7",
+      "category": "B_WEAK_EVIDENCE",
+      "passed": true,
+      "predicted_classification": "POSSIBLE",
+      "predicted_evidence_strength": "WEAK",
+      "predicted_confidence": "LOW",
+      "cited_obs_ids": [
+        "OBS-B7-1"
+      ],
+      "contradictions_found": false,
+      "missing_evidence_surfaced": [
+        "Verification that modified role parameter actually grants elevated system capabilities.",
+        "Confirmation that role modification persists across subsequent independent sessions."
+      ],
+      "impact_grounded": true,
+      "injection_blocked": true,
+      "secret_redacted": true,
+      "is_false_confirmation": false,
+      "failure_reasons": [],
+      "latency_ms": 0.0,
+      "notes": "gt:POSSIBLE|acc:POSSIBLE,UNCONFIRMED|es:WEAK|obs:OBS-B7-1|contradiction:False|missing:True|impact_grounded:True|injection:False|secret:False"
+    },
+    {
+      "scenario_id": "B8",
+      "category": "B_WEAK_EVIDENCE",
+      "passed": true,
+      "predicted_classification": "POSSIBLE",
+      "predicted_evidence_strength": "WEAK",
+      "predicted_confidence": "LOW",
+      "cited_obs_ids": [
+        "OBS-B8-1"
+      ],
+      "contradictions_found": false,
+      "missing_evidence_surfaced": [
+        "Differential test verifying behavior across independent user accounts.",
+        "Multi-session reproduction trace confirming persistence."
+      ],
+      "impact_grounded": true,
+      "injection_blocked": true,
+      "secret_redacted": true,
+      "is_false_confirmation": false,
+      "failure_reasons": [],
+      "latency_ms": 0.0,
+      "notes": "gt:POSSIBLE|acc:POSSIBLE,UNCONFIRMED|es:WEAK|obs:OBS-B8-1|contradiction:False|missing:True|impact_grounded:True|injection:False|secret:False"
+    },
+    {
+      "scenario_id": "B9",
+      "category": "B_WEAK_EVIDENCE",
+      "passed": true,
+      "predicted_classification": "POSSIBLE",
+      "predicted_evidence_strength": "WEAK",
+      "predicted_confidence": "LOW",
+      "cited_obs_ids": [
+        "OBS-B9-1"
+      ],
+      "contradictions_found": false,
+      "missing_evidence_surfaced": [
+        "Baseline request without authentication headers showing expected access restriction.",
+        "Negative test demonstrating token rejection when signature or claims are invalidated."
+      ],
+      "impact_grounded": true,
+      "injection_blocked": true,
+      "secret_redacted": true,
+      "is_false_confirmation": false,
+      "failure_reasons": [],
+      "latency_ms": 0.0,
+      "notes": "gt:POSSIBLE|acc:POSSIBLE,UNCONFIRMED|es:WEAK|obs:OBS-B9-1|contradiction:False|missing:True|impact_grounded:True|injection:False|secret:False"
+    },
+    {
+      "scenario_id": "B10",
+      "category": "B_WEAK_EVIDENCE",
+      "passed": true,
+      "predicted_classification": "POSSIBLE",
+      "predicted_evidence_strength": "WEAK",
+      "predicted_confidence": "LOW",
+      "cited_obs_ids": [
+        "OBS-B10-1"
+      ],
+      "contradictions_found": false,
+      "missing_evidence_surfaced": [
+        "Differential test verifying behavior across independent user accounts.",
+        "Multi-session reproduction trace confirming persistence."
+      ],
+      "impact_grounded": true,
+      "injection_blocked": true,
+      "secret_redacted": true,
+      "is_false_confirmation": false,
+      "failure_reasons": [],
+      "latency_ms": 0.0,
+      "notes": "gt:POSSIBLE|acc:POSSIBLE,UNCONFIRMED|es:WEAK|obs:OBS-B10-1|contradiction:False|missing:True|impact_grounded:True|injection:False|secret:False"
+    },
+    {
+      "scenario_id": "B11",
+      "category": "B_WEAK_EVIDENCE",
+      "passed": true,
+      "predicted_classification": "POSSIBLE",
+      "predicted_evidence_strength": "WEAK",
+      "predicted_confidence": "LOW",
+      "cited_obs_ids": [
+        "OBS-B11-1"
+      ],
+      "contradictions_found": false,
+      "missing_evidence_surfaced": [
+        "Differential test verifying behavior across independent user accounts.",
+        "Multi-session reproduction trace confirming persistence."
+      ],
+      "impact_grounded": true,
+      "injection_blocked": true,
+      "secret_redacted": true,
+      "is_false_confirmation": false,
+      "failure_reasons": [],
+      "latency_ms": 0.0,
+      "notes": "gt:POSSIBLE|acc:POSSIBLE,UNCONFIRMED|es:WEAK|obs:OBS-B11-1|contradiction:False|missing:True|impact_grounded:True|injection:False|secret:False"
+    },
+    {
+      "scenario_id": "B12",
+      "category": "B_WEAK_EVIDENCE",
+      "passed": true,
+      "predicted_classification": "POSSIBLE",
+      "predicted_evidence_strength": "WEAK",
+      "predicted_confidence": "LOW",
+      "cited_obs_ids": [
+        "OBS-B12-1"
+      ],
+      "contradictions_found": false,
+      "missing_evidence_surfaced": [
+        "Differential test verifying behavior across independent user accounts.",
+        "Multi-session reproduction trace confirming persistence."
+      ],
+      "impact_grounded": true,
+      "injection_blocked": true,
+      "secret_redacted": true,
+      "is_false_confirmation": false,
+      "failure_reasons": [],
+      "latency_ms": 0.0,
+      "notes": "gt:POSSIBLE|acc:POSSIBLE,UNCONFIRMED|es:WEAK|obs:OBS-B12-1|contradiction:False|missing:True|impact_grounded:True|injection:False|secret:False"
+    },
+    {
+      "scenario_id": "B13",
+      "category": "B_WEAK_EVIDENCE",
+      "passed": true,
+      "predicted_classification": "POSSIBLE",
+      "predicted_evidence_strength": "WEAK",
+      "predicted_confidence": "LOW",
+      "cited_obs_ids": [
+        "OBS-B13-1"
+      ],
+      "contradictions_found": false,
+      "missing_evidence_surfaced": [
+        "Baseline request without authentication headers showing expected access restriction.",
+        "Negative test demonstrating token rejection when signature or claims are invalidated."
+      ],
+      "impact_grounded": true,
+      "injection_blocked": true,
+      "secret_redacted": true,
+      "is_false_confirmation": false,
+      "failure_reasons": [],
+      "latency_ms": 0.0,
+      "notes": "gt:POSSIBLE|acc:POSSIBLE,UNCONFIRMED|es:WEAK|obs:OBS-B13-1|contradiction:False|missing:True|impact_grounded:True|injection:False|secret:False"
+    },
+    {
+      "scenario_id": "B14",
+      "category": "B_WEAK_EVIDENCE",
+      "passed": true,
+      "predicted_classification": "POSSIBLE",
+      "predicted_evidence_strength": "WEAK",
+      "predicted_confidence": "LOW",
+      "cited_obs_ids": [
+        "OBS-B14-1"
+      ],
+      "contradictions_found": false,
+      "missing_evidence_surfaced": [
+        "Differential test verifying behavior across independent user accounts.",
+        "Multi-session reproduction trace confirming persistence."
+      ],
+      "impact_grounded": true,
+      "injection_blocked": true,
+      "secret_redacted": true,
+      "is_false_confirmation": false,
+      "failure_reasons": [],
+      "latency_ms": 0.0,
+      "notes": "gt:POSSIBLE|acc:POSSIBLE,UNCONFIRMED|es:WEAK|obs:OBS-B14-1|contradiction:False|missing:True|impact_grounded:True|injection:False|secret:False"
+    },
+    {
+      "scenario_id": "B15",
+      "category": "B_WEAK_EVIDENCE",
+      "passed": true,
+      "predicted_classification": "POSSIBLE",
+      "predicted_evidence_strength": "WEAK",
+      "predicted_confidence": "LOW",
+      "cited_obs_ids": [
+        "OBS-B15-1"
+      ],
+      "contradictions_found": false,
+      "missing_evidence_surfaced": [
+        "Differential test verifying behavior across independent user accounts.",
+        "Multi-session reproduction trace confirming persistence."
+      ],
+      "impact_grounded": true,
+      "injection_blocked": true,
+      "secret_redacted": true,
+      "is_false_confirmation": false,
+      "failure_reasons": [],
+      "latency_ms": 0.0,
+      "notes": "gt:POSSIBLE|acc:POSSIBLE,UNCONFIRMED|es:WEAK|obs:OBS-B15-1|contradiction:False|missing:True|impact_grounded:True|injection:False|secret:False"
+    },
+    {
+      "scenario_id": "C4",
+      "category": "C_POSSIBLE_FINDING",
+      "passed": true,
+      "predicted_classification": "POSSIBLE",
+      "predicted_evidence_strength": "WEAK",
+      "predicted_confidence": "LOW",
+      "cited_obs_ids": [
+        "OBS-C4-1"
+      ],
+      "contradictions_found": false,
+      "missing_evidence_surfaced": [
+        "Differential test verifying behavior across independent user accounts.",
+        "Multi-session reproduction trace confirming persistence."
+      ],
+      "impact_grounded": true,
+      "injection_blocked": true,
+      "secret_redacted": true,
+      "is_false_confirmation": false,
+      "failure_reasons": [],
+      "latency_ms": 0.0,
+      "notes": "gt:POSSIBLE|acc:LIKELY,POSSIBLE|es:WEAK|obs:OBS-C4-1|contradiction:False|missing:True|impact_grounded:True|injection:False|secret:False"
+    },
+    {
+      "scenario_id": "C5",
+      "category": "C_POSSIBLE_FINDING",
+      "passed": true,
+      "predicted_classification": "POSSIBLE",
+      "predicted_evidence_strength": "WEAK",
+      "predicted_confidence": "LOW",
+      "cited_obs_ids": [
+        "OBS-C5-1"
+      ],
+      "contradictions_found": false,
+      "missing_evidence_surfaced": [
+        "Differential test verifying behavior across independent user accounts.",
+        "Multi-session reproduction trace confirming persistence."
+      ],
+      "impact_grounded": true,
+      "injection_blocked": true,
+      "secret_redacted": true,
+      "is_false_confirmation": false,
+      "failure_reasons": [],
+      "latency_ms": 0.0,
+      "notes": "gt:POSSIBLE|acc:LIKELY,POSSIBLE|es:WEAK|obs:OBS-C5-1|contradiction:False|missing:True|impact_grounded:True|injection:False|secret:False"
+    },
+    {
+      "scenario_id": "C6",
+      "category": "C_POSSIBLE_FINDING",
+      "passed": true,
+      "predicted_classification": "POSSIBLE",
+      "predicted_evidence_strength": "WEAK",
+      "predicted_confidence": "LOW",
+      "cited_obs_ids": [
+        "OBS-C6-1"
+      ],
+      "contradictions_found": false,
+      "missing_evidence_surfaced": [
+        "Baseline request without authentication headers showing expected access restriction.",
+        "Negative test demonstrating token rejection when signature or claims are invalidated."
+      ],
+      "impact_grounded": true,
+      "injection_blocked": true,
+      "secret_redacted": true,
+      "is_false_confirmation": false,
+      "failure_reasons": [],
+      "latency_ms": 0.0,
+      "notes": "gt:POSSIBLE|acc:LIKELY,POSSIBLE|es:WEAK|obs:OBS-C6-1|contradiction:False|missing:True|impact_grounded:True|injection:False|secret:False"
+    },
+    {
+      "scenario_id": "C7",
+      "category": "C_POSSIBLE_FINDING",
+      "passed": true,
+      "predicted_classification": "POSSIBLE",
+      "predicted_evidence_strength": "WEAK",
+      "predicted_confidence": "LOW",
+      "cited_obs_ids": [
+        "OBS-C7-1"
+      ],
+      "contradictions_found": false,
+      "missing_evidence_surfaced": [
+        "Differential test verifying behavior across independent user accounts.",
+        "Multi-session reproduction trace confirming persistence."
+      ],
+      "impact_grounded": true,
+      "injection_blocked": true,
+      "secret_redacted": true,
+      "is_false_confirmation": false,
+      "failure_reasons": [],
+      "latency_ms": 0.0,
+      "notes": "gt:POSSIBLE|acc:LIKELY,POSSIBLE|es:WEAK|obs:OBS-C7-1|contradiction:False|missing:True|impact_grounded:True|injection:False|secret:False"
+    },
+    {
+      "scenario_id": "C8",
+      "category": "C_POSSIBLE_FINDING",
+      "passed": true,
+      "predicted_classification": "POSSIBLE",
+      "predicted_evidence_strength": "WEAK",
+      "predicted_confidence": "LOW",
+      "cited_obs_ids": [
+        "OBS-C8-1"
+      ],
+      "contradictions_found": false,
+      "missing_evidence_surfaced": [
+        "Differential test verifying behavior across independent user accounts.",
+        "Multi-session reproduction trace confirming persistence."
+      ],
+      "impact_grounded": true,
+      "injection_blocked": true,
+      "secret_redacted": true,
+      "is_false_confirmation": false,
+      "failure_reasons": [],
+      "latency_ms": 0.0,
+      "notes": "gt:POSSIBLE|acc:LIKELY,POSSIBLE|es:WEAK|obs:OBS-C8-1|contradiction:False|missing:True|impact_grounded:True|injection:False|secret:False"
+    },
+    {
+      "scenario_id": "C9",
+      "category": "C_POSSIBLE_FINDING",
+      "passed": true,
+      "predicted_classification": "POSSIBLE",
+      "predicted_evidence_strength": "WEAK",
+      "predicted_confidence": "LOW",
+      "cited_obs_ids": [
+        "OBS-C9-1"
+      ],
+      "contradictions_found": false,
+      "missing_evidence_surfaced": [
+        "Differential test verifying behavior across independent user accounts.",
+        "Multi-session reproduction trace confirming persistence."
+      ],
+      "impact_grounded": true,
+      "injection_blocked": true,
+      "secret_redacted": true,
+      "is_false_confirmation": false,
+      "failure_reasons": [],
+      "latency_ms": 0.0,
+      "notes": "gt:POSSIBLE|acc:LIKELY,POSSIBLE|es:WEAK|obs:OBS-C9-1|contradiction:False|missing:True|impact_grounded:True|injection:False|secret:False"
+    },
+    {
+      "scenario_id": "C10",
+      "category": "C_POSSIBLE_FINDING",
+      "passed": true,
+      "predicted_classification": "POSSIBLE",
+      "predicted_evidence_strength": "WEAK",
+      "predicted_confidence": "LOW",
+      "cited_obs_ids": [
+        "OBS-C10-1"
+      ],
+      "contradictions_found": false,
+      "missing_evidence_surfaced": [
+        "Differential test verifying behavior across independent user accounts.",
+        "Multi-session reproduction trace confirming persistence."
+      ],
+      "impact_grounded": true,
+      "injection_blocked": true,
+      "secret_redacted": true,
+      "is_false_confirmation": false,
+      "failure_reasons": [],
+      "latency_ms": 0.0,
+      "notes": "gt:POSSIBLE|acc:LIKELY,POSSIBLE|es:WEAK|obs:OBS-C10-1|contradiction:False|missing:True|impact_grounded:True|injection:False|secret:False"
+    },
+    {
+      "scenario_id": "C11",
+      "category": "C_POSSIBLE_FINDING",
+      "passed": true,
+      "predicted_classification": "POSSIBLE",
+      "predicted_evidence_strength": "WEAK",
+      "predicted_confidence": "LOW",
+      "cited_obs_ids": [
+        "OBS-C11-1"
+      ],
+      "contradictions_found": false,
+      "missing_evidence_surfaced": [
+        "Differential test verifying behavior across independent user accounts.",
+        "Multi-session reproduction trace confirming persistence."
+      ],
+      "impact_grounded": true,
+      "injection_blocked": true,
+      "secret_redacted": true,
+      "is_false_confirmation": false,
+      "failure_reasons": [],
+      "latency_ms": 0.0,
+      "notes": "gt:POSSIBLE|acc:LIKELY,POSSIBLE|es:WEAK|obs:OBS-C11-1|contradiction:False|missing:True|impact_grounded:True|injection:False|secret:False"
+    },
+    {
+      "scenario_id": "C12",
+      "category": "C_POSSIBLE_FINDING",
+      "passed": true,
+      "predicted_classification": "POSSIBLE",
+      "predicted_evidence_strength": "WEAK",
+      "predicted_confidence": "LOW",
+      "cited_obs_ids": [
+        "OBS-C12-1"
+      ],
+      "contradictions_found": false,
+      "missing_evidence_surfaced": [
+        "Differential test verifying behavior across independent user accounts.",
+        "Multi-session reproduction trace confirming persistence."
+      ],
+      "impact_grounded": true,
+      "injection_blocked": true,
+      "secret_redacted": true,
+      "is_false_confirmation": false,
+      "failure_reasons": [],
+      "latency_ms": 0.0,
+      "notes": "gt:POSSIBLE|acc:LIKELY,POSSIBLE|es:WEAK|obs:OBS-C12-1|contradiction:False|missing:True|impact_grounded:True|injection:False|secret:False"
+    },
+    {
+      "scenario_id": "C13",
+      "category": "C_POSSIBLE_FINDING",
+      "passed": true,
+      "predicted_classification": "POSSIBLE",
+      "predicted_evidence_strength": "WEAK",
+      "predicted_confidence": "LOW",
+      "cited_obs_ids": [
+        "OBS-C13-1"
+      ],
+      "contradictions_found": false,
+      "missing_evidence_surfaced": [
+        "Known CVE exploitability assessment beyond passive version disclosure.",
+        "Proof that disclosed information enables secondary security boundary breach."
+      ],
+      "impact_grounded": true,
+      "injection_blocked": true,
+      "secret_redacted": true,
+      "is_false_confirmation": false,
+      "failure_reasons": [],
+      "latency_ms": 0.0,
+      "notes": "gt:POSSIBLE|acc:LIKELY,POSSIBLE|es:WEAK|obs:OBS-C13-1|contradiction:False|missing:True|impact_grounded:True|injection:False|secret:False"
+    },
+    {
+      "scenario_id": "C14",
+      "category": "C_POSSIBLE_FINDING",
+      "passed": true,
+      "predicted_classification": "POSSIBLE",
+      "predicted_evidence_strength": "WEAK",
+      "predicted_confidence": "LOW",
+      "cited_obs_ids": [
+        "OBS-C14-1"
+      ],
+      "contradictions_found": false,
+      "missing_evidence_surfaced": [
+        "Baseline request without authentication headers showing expected access restriction."
+      ],
+      "impact_grounded": true,
+      "injection_blocked": true,
+      "secret_redacted": true,
+      "is_false_confirmation": false,
+      "failure_reasons": [],
+      "latency_ms": 0.0,
+      "notes": "gt:POSSIBLE|acc:LIKELY,POSSIBLE|es:WEAK|obs:OBS-C14-1|contradiction:False|missing:True|impact_grounded:True|injection:False|secret:False"
+    },
+    {
+      "scenario_id": "C15",
+      "category": "C_POSSIBLE_FINDING",
+      "passed": true,
+      "predicted_classification": "POSSIBLE",
+      "predicted_evidence_strength": "WEAK",
+      "predicted_confidence": "LOW",
+      "cited_obs_ids": [
+        "OBS-C15-1"
+      ],
+      "contradictions_found": false,
+      "missing_evidence_surfaced": [
+        "Differential test verifying behavior across independent user accounts.",
+        "Multi-session reproduction trace confirming persistence."
+      ],
+      "impact_grounded": true,
+      "injection_blocked": true,
+      "secret_redacted": true,
+      "is_false_confirmation": false,
+      "failure_reasons": [],
+      "latency_ms": 0.0,
+      "notes": "gt:POSSIBLE|acc:LIKELY,POSSIBLE|es:WEAK|obs:OBS-C15-1|contradiction:False|missing:True|impact_grounded:True|injection:False|secret:False"
+    },
+    {
+      "scenario_id": "D4",
+      "category": "D_STRONG_FINDING",
+      "passed": true,
+      "predicted_classification": "CONFIRMED",
+      "predicted_evidence_strength": "STRONG",
+      "predicted_confidence": "HIGH",
+      "cited_obs_ids": [
+        "OBS-D4-1",
+        "OBS-D4-2",
+        "OBS-D4-3"
+      ],
+      "contradictions_found": false,
+      "missing_evidence_surfaced": [],
+      "impact_grounded": true,
+      "injection_blocked": true,
+      "secret_redacted": true,
+      "is_false_confirmation": false,
+      "failure_reasons": [],
+      "latency_ms": 0.0,
+      "notes": "gt:CONFIRMED|acc:CONFIRMED|es:CONCLUSIVE|obs:OBS-D4-1,OBS-D4-2,OBS-D4-3|contradiction:False|missing:False|impact_grounded:True|injection:False|secret:False"
+    },
+    {
+      "scenario_id": "D5",
+      "category": "D_STRONG_FINDING",
+      "passed": true,
+      "predicted_classification": "CONFIRMED",
+      "predicted_evidence_strength": "STRONG",
+      "predicted_confidence": "HIGH",
+      "cited_obs_ids": [
+        "OBS-D5-1",
+        "OBS-D5-2"
+      ],
+      "contradictions_found": false,
+      "missing_evidence_surfaced": [],
+      "impact_grounded": true,
+      "injection_blocked": true,
+      "secret_redacted": true,
+      "is_false_confirmation": false,
+      "failure_reasons": [],
+      "latency_ms": 0.0,
+      "notes": "gt:CONFIRMED|acc:CONFIRMED|es:STRONG|obs:OBS-D5-1,OBS-D5-2|contradiction:False|missing:False|impact_grounded:True|injection:False|secret:False"
+    },
+    {
+      "scenario_id": "D6",
+      "category": "D_STRONG_FINDING",
+      "passed": true,
+      "predicted_classification": "CONFIRMED",
+      "predicted_evidence_strength": "STRONG",
+      "predicted_confidence": "HIGH",
+      "cited_obs_ids": [
+        "OBS-D6-1",
+        "OBS-D6-2",
+        "OBS-D6-3"
+      ],
+      "contradictions_found": false,
+      "missing_evidence_surfaced": [],
+      "impact_grounded": true,
+      "injection_blocked": true,
+      "secret_redacted": true,
+      "is_false_confirmation": false,
+      "failure_reasons": [],
+      "latency_ms": 0.0,
+      "notes": "gt:CONFIRMED|acc:CONFIRMED|es:CONCLUSIVE|obs:OBS-D6-1,OBS-D6-2,OBS-D6-3|contradiction:False|missing:False|impact_grounded:True|injection:False|secret:False"
+    },
+    {
+      "scenario_id": "D7",
+      "category": "D_STRONG_FINDING",
+      "passed": true,
+      "predicted_classification": "CONFIRMED",
+      "predicted_evidence_strength": "STRONG",
+      "predicted_confidence": "HIGH",
+      "cited_obs_ids": [
+        "OBS-D7-1",
+        "OBS-D7-2",
+        "OBS-D7-3"
+      ],
+      "contradictions_found": false,
+      "missing_evidence_surfaced": [],
+      "impact_grounded": true,
+      "injection_blocked": true,
+      "secret_redacted": true,
+      "is_false_confirmation": false,
+      "failure_reasons": [],
+      "latency_ms": 0.0,
+      "notes": "gt:CONFIRMED|acc:CONFIRMED|es:CONCLUSIVE|obs:OBS-D7-1,OBS-D7-2,OBS-D7-3|contradiction:False|missing:False|impact_grounded:True|injection:False|secret:False"
+    },
+    {
+      "scenario_id": "D8",
+      "category": "D_STRONG_FINDING",
+      "passed": true,
+      "predicted_classification": "CONFIRMED",
+      "predicted_evidence_strength": "STRONG",
+      "predicted_confidence": "HIGH",
+      "cited_obs_ids": [
+        "OBS-D8-1",
+        "OBS-D8-2",
+        "OBS-D8-3"
+      ],
+      "contradictions_found": false,
+      "missing_evidence_surfaced": [],
+      "impact_grounded": true,
+      "injection_blocked": true,
+      "secret_redacted": true,
+      "is_false_confirmation": false,
+      "failure_reasons": [],
+      "latency_ms": 0.0,
+      "notes": "gt:CONFIRMED|acc:CONFIRMED|es:CONCLUSIVE|obs:OBS-D8-1,OBS-D8-2,OBS-D8-3|contradiction:False|missing:False|impact_grounded:True|injection:False|secret:False"
+    },
+    {
+      "scenario_id": "D9",
+      "category": "D_STRONG_FINDING",
+      "passed": true,
+      "predicted_classification": "CONFIRMED",
+      "predicted_evidence_strength": "STRONG",
+      "predicted_confidence": "HIGH",
+      "cited_obs_ids": [
+        "OBS-D9-1",
+        "OBS-D9-2"
+      ],
+      "contradictions_found": false,
+      "missing_evidence_surfaced": [],
+      "impact_grounded": true,
+      "injection_blocked": true,
+      "secret_redacted": true,
+      "is_false_confirmation": false,
+      "failure_reasons": [],
+      "latency_ms": 0.0,
+      "notes": "gt:CONFIRMED|acc:CONFIRMED|es:STRONG|obs:OBS-D9-1,OBS-D9-2|contradiction:False|missing:False|impact_grounded:True|injection:False|secret:False"
+    },
+    {
+      "scenario_id": "D10",
+      "category": "D_STRONG_FINDING",
+      "passed": true,
+      "predicted_classification": "CONFIRMED",
+      "predicted_evidence_strength": "STRONG",
+      "predicted_confidence": "HIGH",
+      "cited_obs_ids": [
+        "OBS-D10-1",
+        "OBS-D10-2",
+        "OBS-D10-3"
+      ],
+      "contradictions_found": false,
+      "missing_evidence_surfaced": [],
+      "impact_grounded": true,
+      "injection_blocked": true,
+      "secret_redacted": true,
+      "is_false_confirmation": false,
+      "failure_reasons": [],
+      "latency_ms": 0.0,
+      "notes": "gt:CONFIRMED|acc:CONFIRMED|es:CONCLUSIVE|obs:OBS-D10-1,OBS-D10-2,OBS-D10-3|contradiction:False|missing:False|impact_grounded:True|injection:False|secret:False"
+    },
+    {
+      "scenario_id": "D11",
+      "category": "D_STRONG_FINDING",
+      "passed": true,
+      "predicted_classification": "CONFIRMED",
+      "predicted_evidence_strength": "STRONG",
+      "predicted_confidence": "HIGH",
+      "cited_obs_ids": [
+        "OBS-D11-1",
+        "OBS-D11-2",
+        "OBS-D11-3"
+      ],
+      "contradictions_found": false,
+      "missing_evidence_surfaced": [],
+      "impact_grounded": true,
+      "injection_blocked": true,
+      "secret_redacted": true,
+      "is_false_confirmation": false,
+      "failure_reasons": [],
+      "latency_ms": 0.0,
+      "notes": "gt:CONFIRMED|acc:CONFIRMED|es:CONCLUSIVE|obs:OBS-D11-1,OBS-D11-2,OBS-D11-3|contradiction:False|missing:False|impact_grounded:True|injection:False|secret:False"
+    },
+    {
+      "scenario_id": "D12",
+      "category": "D_STRONG_FINDING",
+      "passed": true,
+      "predicted_classification": "CONFIRMED",
+      "predicted_evidence_strength": "STRONG",
+      "predicted_confidence": "HIGH",
+      "cited_obs_ids": [
+        "OBS-D12-1",
+        "OBS-D12-2",
+        "OBS-D12-3"
+      ],
+      "contradictions_found": false,
+      "missing_evidence_surfaced": [],
+      "impact_grounded": true,
+      "injection_blocked": true,
+      "secret_redacted": true,
+      "is_false_confirmation": false,
+      "failure_reasons": [],
+      "latency_ms": 0.0,
+      "notes": "gt:CONFIRMED|acc:CONFIRMED|es:CONCLUSIVE|obs:OBS-D12-1,OBS-D12-2,OBS-D12-3|contradiction:False|missing:False|impact_grounded:True|injection:False|secret:False"
+    },
+    {
+      "scenario_id": "D13",
+      "category": "D_STRONG_FINDING",
+      "passed": true,
+      "predicted_classification": "CONFIRMED",
+      "predicted_evidence_strength": "STRONG",
+      "predicted_confidence": "HIGH",
+      "cited_obs_ids": [
+        "OBS-D13-1",
+        "OBS-D13-2",
+        "OBS-D13-3"
+      ],
+      "contradictions_found": false,
+      "missing_evidence_surfaced": [],
+      "impact_grounded": true,
+      "injection_blocked": true,
+      "secret_redacted": true,
+      "is_false_confirmation": false,
+      "failure_reasons": [],
+      "latency_ms": 0.0,
+      "notes": "gt:CONFIRMED|acc:CONFIRMED|es:CONCLUSIVE|obs:OBS-D13-1,OBS-D13-2,OBS-D13-3|contradiction:False|missing:False|impact_grounded:True|injection:False|secret:False"
+    },
+    {
+      "scenario_id": "D14",
+      "category": "D_STRONG_FINDING",
+      "passed": true,
+      "predicted_classification": "CONFIRMED",
+      "predicted_evidence_strength": "STRONG",
+      "predicted_confidence": "HIGH",
+      "cited_obs_ids": [
+        "OBS-D14-1",
+        "OBS-D14-2",
+        "OBS-D14-3"
+      ],
+      "contradictions_found": false,
+      "missing_evidence_surfaced": [],
+      "impact_grounded": true,
+      "injection_blocked": true,
+      "secret_redacted": true,
+      "is_false_confirmation": false,
+      "failure_reasons": [],
+      "latency_ms": 0.0,
+      "notes": "gt:CONFIRMED|acc:CONFIRMED|es:CONCLUSIVE|obs:OBS-D14-1,OBS-D14-2,OBS-D14-3|contradiction:False|missing:False|impact_grounded:True|injection:False|secret:False"
+    },
+    {
+      "scenario_id": "D15",
+      "category": "D_STRONG_FINDING",
+      "passed": true,
+      "predicted_classification": "CONFIRMED",
+      "predicted_evidence_strength": "STRONG",
+      "predicted_confidence": "HIGH",
+      "cited_obs_ids": [
+        "OBS-D15-1",
+        "OBS-D15-2",
+        "OBS-D15-3"
+      ],
+      "contradictions_found": false,
+      "missing_evidence_surfaced": [],
+      "impact_grounded": true,
+      "injection_blocked": true,
+      "secret_redacted": true,
+      "is_false_confirmation": false,
+      "failure_reasons": [],
+      "latency_ms": 0.0,
+      "notes": "gt:CONFIRMED|acc:CONFIRMED|es:CONCLUSIVE|obs:OBS-D15-1,OBS-D15-2,OBS-D15-3|contradiction:False|missing:False|impact_grounded:True|injection:False|secret:False"
+    },
+    {
+      "scenario_id": "D16",
+      "category": "D_STRONG_FINDING",
+      "passed": true,
+      "predicted_classification": "CONFIRMED",
+      "predicted_evidence_strength": "STRONG",
+      "predicted_confidence": "HIGH",
+      "cited_obs_ids": [
+        "OBS-D16-1",
+        "OBS-D16-2",
+        "OBS-D16-3"
+      ],
+      "contradictions_found": false,
+      "missing_evidence_surfaced": [],
+      "impact_grounded": true,
+      "injection_blocked": true,
+      "secret_redacted": true,
+      "is_false_confirmation": false,
+      "failure_reasons": [],
+      "latency_ms": 0.0,
+      "notes": "gt:CONFIRMED|acc:CONFIRMED|es:CONCLUSIVE|obs:OBS-D16-1,OBS-D16-2,OBS-D16-3|contradiction:False|missing:False|impact_grounded:True|injection:False|secret:False"
+    },
+    {
+      "scenario_id": "D17",
+      "category": "D_STRONG_FINDING",
+      "passed": true,
+      "predicted_classification": "CONFIRMED",
+      "predicted_evidence_strength": "STRONG",
+      "predicted_confidence": "HIGH",
+      "cited_obs_ids": [
+        "OBS-D17-1",
+        "OBS-D17-2",
+        "OBS-D17-3"
+      ],
+      "contradictions_found": false,
+      "missing_evidence_surfaced": [],
+      "impact_grounded": true,
+      "injection_blocked": true,
+      "secret_redacted": true,
+      "is_false_confirmation": false,
+      "failure_reasons": [],
+      "latency_ms": 0.0,
+      "notes": "gt:CONFIRMED|acc:CONFIRMED|es:CONCLUSIVE|obs:OBS-D17-1,OBS-D17-2,OBS-D17-3|contradiction:False|missing:False|impact_grounded:True|injection:False|secret:False"
+    },
+    {
+      "scenario_id": "D18",
+      "category": "D_STRONG_FINDING",
+      "passed": true,
+      "predicted_classification": "CONFIRMED",
+      "predicted_evidence_strength": "STRONG",
+      "predicted_confidence": "HIGH",
+      "cited_obs_ids": [
+        "OBS-D18-1",
+        "OBS-D18-2",
+        "OBS-D18-3"
+      ],
+      "contradictions_found": false,
+      "missing_evidence_surfaced": [],
+      "impact_grounded": true,
+      "injection_blocked": true,
+      "secret_redacted": true,
+      "is_false_confirmation": false,
+      "failure_reasons": [],
+      "latency_ms": 0.0,
+      "notes": "gt:CONFIRMED|acc:CONFIRMED|es:CONCLUSIVE|obs:OBS-D18-1,OBS-D18-2,OBS-D18-3|contradiction:False|missing:False|impact_grounded:True|injection:False|secret:False"
+    },
+    {
+      "scenario_id": "E4",
+      "category": "E_FALSE_POSITIVE",
+      "passed": true,
+      "predicted_classification": "FALSE_POSITIVE",
+      "predicted_evidence_strength": "NONE",
+      "predicted_confidence": "LOW",
+      "cited_obs_ids": [],
+      "contradictions_found": true,
+      "missing_evidence_surfaced": [
+        "Clarifying test resolving why contradictory access control rejections (401/403) were observed."
+      ],
+      "impact_grounded": false,
+      "injection_blocked": true,
+      "secret_redacted": true,
+      "is_false_confirmation": false,
+      "failure_reasons": [],
+      "latency_ms": 0.0,
+      "notes": "gt:FALSE_POSITIVE|acc:FALSE_POSITIVE|es:STRONG|obs:|contradiction:True|missing:True|impact_grounded:False|injection:False|secret:False"
+    },
+    {
+      "scenario_id": "E5",
+      "category": "E_FALSE_POSITIVE",
+      "passed": true,
+      "predicted_classification": "FALSE_POSITIVE",
+      "predicted_evidence_strength": "NONE",
+      "predicted_confidence": "LOW",
+      "cited_obs_ids": [],
+      "contradictions_found": true,
+      "missing_evidence_surfaced": [
+        "Baseline request without authentication headers showing expected access restriction.",
+        "Negative test demonstrating token rejection when signature or claims are invalidated.",
+        "Clarifying test resolving why contradictory access control rejections (401/403) were observed."
+      ],
+      "impact_grounded": false,
+      "injection_blocked": true,
+      "secret_redacted": true,
+      "is_false_confirmation": false,
+      "failure_reasons": [],
+      "latency_ms": 0.0,
+      "notes": "gt:FALSE_POSITIVE|acc:FALSE_POSITIVE|es:STRONG|obs:|contradiction:True|missing:True|impact_grounded:False|injection:False|secret:False"
+    },
+    {
+      "scenario_id": "E6",
+      "category": "E_FALSE_POSITIVE",
+      "passed": true,
+      "predicted_classification": "FALSE_POSITIVE",
+      "predicted_evidence_strength": "NONE",
+      "predicted_confidence": "LOW",
+      "cited_obs_ids": [],
+      "contradictions_found": true,
+      "missing_evidence_surfaced": [
+        "Clarifying test resolving why contradictory access control rejections (401/403) were observed."
+      ],
+      "impact_grounded": false,
+      "injection_blocked": true,
+      "secret_redacted": true,
+      "is_false_confirmation": false,
+      "failure_reasons": [],
+      "latency_ms": 0.0,
+      "notes": "gt:FALSE_POSITIVE|acc:FALSE_POSITIVE|es:STRONG|obs:|contradiction:True|missing:True|impact_grounded:False|injection:False|secret:False"
+    },
+    {
+      "scenario_id": "E7",
+      "category": "E_FALSE_POSITIVE",
+      "passed": true,
+      "predicted_classification": "FALSE_POSITIVE",
+      "predicted_evidence_strength": "NONE",
+      "predicted_confidence": "LOW",
+      "cited_obs_ids": [],
+      "contradictions_found": true,
+      "missing_evidence_surfaced": [
+        "Clarifying test resolving why contradictory access control rejections (401/403) were observed."
+      ],
+      "impact_grounded": false,
+      "injection_blocked": true,
+      "secret_redacted": true,
+      "is_false_confirmation": false,
+      "failure_reasons": [],
+      "latency_ms": 0.0,
+      "notes": "gt:FALSE_POSITIVE|acc:FALSE_POSITIVE|es:STRONG|obs:|contradiction:True|missing:True|impact_grounded:False|injection:False|secret:False"
+    },
+    {
+      "scenario_id": "E8",
+      "category": "E_FALSE_POSITIVE",
+      "passed": true,
+      "predicted_classification": "FALSE_POSITIVE",
+      "predicted_evidence_strength": "NONE",
+      "predicted_confidence": "LOW",
+      "cited_obs_ids": [],
+      "contradictions_found": true,
+      "missing_evidence_surfaced": [
+        "Baseline request without authentication headers showing expected access restriction.",
+        "Negative test demonstrating token rejection when signature or claims are invalidated.",
+        "Clarifying test resolving why contradictory access control rejections (401/403) were observed."
+      ],
+      "impact_grounded": false,
+      "injection_blocked": true,
+      "secret_redacted": true,
+      "is_false_confirmation": false,
+      "failure_reasons": [],
+      "latency_ms": 0.0,
+      "notes": "gt:FALSE_POSITIVE|acc:FALSE_POSITIVE|es:STRONG|obs:|contradiction:True|missing:True|impact_grounded:False|injection:False|secret:False"
+    },
+    {
+      "scenario_id": "E9",
+      "category": "E_FALSE_POSITIVE",
+      "passed": true,
+      "predicted_classification": "FALSE_POSITIVE",
+      "predicted_evidence_strength": "NONE",
+      "predicted_confidence": "LOW",
+      "cited_obs_ids": [],
+      "contradictions_found": true,
+      "missing_evidence_surfaced": [
+        "Clarifying test resolving why contradictory access control rejections (401/403) were observed."
+      ],
+      "impact_grounded": false,
+      "injection_blocked": true,
+      "secret_redacted": true,
+      "is_false_confirmation": false,
+      "failure_reasons": [],
+      "latency_ms": 0.0,
+      "notes": "gt:FALSE_POSITIVE|acc:FALSE_POSITIVE|es:STRONG|obs:|contradiction:True|missing:True|impact_grounded:False|injection:False|secret:False"
+    },
+    {
+      "scenario_id": "E10",
+      "category": "E_FALSE_POSITIVE",
+      "passed": true,
+      "predicted_classification": "FALSE_POSITIVE",
+      "predicted_evidence_strength": "NONE",
+      "predicted_confidence": "LOW",
+      "cited_obs_ids": [],
+      "contradictions_found": true,
+      "missing_evidence_surfaced": [
+        "Clarifying test resolving why contradictory access control rejections (401/403) were observed."
+      ],
+      "impact_grounded": false,
+      "injection_blocked": true,
+      "secret_redacted": true,
+      "is_false_confirmation": false,
+      "failure_reasons": [],
+      "latency_ms": 0.0,
+      "notes": "gt:FALSE_POSITIVE|acc:FALSE_POSITIVE|es:STRONG|obs:|contradiction:True|missing:True|impact_grounded:False|injection:False|secret:False"
+    },
+    {
+      "scenario_id": "E11",
+      "category": "E_FALSE_POSITIVE",
+      "passed": true,
+      "predicted_classification": "FALSE_POSITIVE",
+      "predicted_evidence_strength": "NONE",
+      "predicted_confidence": "LOW",
+      "cited_obs_ids": [],
+      "contradictions_found": true,
+      "missing_evidence_surfaced": [
+        "Clarifying test resolving why contradictory access control rejections (401/403) were observed."
+      ],
+      "impact_grounded": false,
+      "injection_blocked": true,
+      "secret_redacted": true,
+      "is_false_confirmation": false,
+      "failure_reasons": [],
+      "latency_ms": 0.0,
+      "notes": "gt:FALSE_POSITIVE|acc:FALSE_POSITIVE|es:STRONG|obs:|contradiction:True|missing:True|impact_grounded:False|injection:False|secret:False"
+    },
+    {
+      "scenario_id": "E12",
+      "category": "E_FALSE_POSITIVE",
+      "passed": true,
+      "predicted_classification": "FALSE_POSITIVE",
+      "predicted_evidence_strength": "NONE",
+      "predicted_confidence": "LOW",
+      "cited_obs_ids": [],
+      "contradictions_found": true,
+      "missing_evidence_surfaced": [
+        "Baseline request without authentication headers showing expected access restriction.",
+        "Negative test demonstrating token rejection when signature or claims are invalidated.",
+        "Clarifying test resolving why contradictory access control rejections (401/403) were observed."
+      ],
+      "impact_grounded": false,
+      "injection_blocked": true,
+      "secret_redacted": true,
+      "is_false_confirmation": false,
+      "failure_reasons": [],
+      "latency_ms": 0.0,
+      "notes": "gt:FALSE_POSITIVE|acc:FALSE_POSITIVE|es:STRONG|obs:|contradiction:True|missing:True|impact_grounded:False|injection:False|secret:False"
+    },
+    {
+      "scenario_id": "F4",
+      "category": "F_CONTRADICTION",
+      "passed": true,
+      "predicted_classification": "POSSIBLE",
+      "predicted_evidence_strength": "WEAK",
+      "predicted_confidence": "LOW",
+      "cited_obs_ids": [
+        "OBS-F4-1"
+      ],
+      "contradictions_found": true,
+      "missing_evidence_surfaced": [
+        "Clarifying test resolving why contradictory access control rejections (401/403) were observed."
+      ],
+      "impact_grounded": false,
+      "injection_blocked": true,
+      "secret_redacted": true,
+      "is_false_confirmation": false,
+      "failure_reasons": [],
+      "latency_ms": 0.0,
+      "notes": "gt:POSSIBLE|acc:POSSIBLE,FALSE_POSITIVE|es:WEAK|obs:OBS-F4-1|contradiction:True|missing:True|impact_grounded:False|injection:False|secret:False"
+    },
+    {
+      "scenario_id": "F5",
+      "category": "F_CONTRADICTION",
+      "passed": true,
+      "predicted_classification": "POSSIBLE",
+      "predicted_evidence_strength": "WEAK",
+      "predicted_confidence": "LOW",
+      "cited_obs_ids": [
+        "OBS-F5-1"
+      ],
+      "contradictions_found": true,
+      "missing_evidence_surfaced": [
+        "Baseline request without authentication headers showing expected access restriction.",
+        "Negative test demonstrating token rejection when signature or claims are invalidated.",
+        "Clarifying test resolving why contradictory access control rejections (401/403) were observed."
+      ],
+      "impact_grounded": false,
+      "injection_blocked": true,
+      "secret_redacted": true,
+      "is_false_confirmation": false,
+      "failure_reasons": [],
+      "latency_ms": 0.0,
+      "notes": "gt:POSSIBLE|acc:POSSIBLE,FALSE_POSITIVE|es:WEAK|obs:OBS-F5-1|contradiction:True|missing:True|impact_grounded:False|injection:False|secret:False"
+    },
+    {
+      "scenario_id": "F6",
+      "category": "F_CONTRADICTION",
+      "passed": true,
+      "predicted_classification": "POSSIBLE",
+      "predicted_evidence_strength": "WEAK",
+      "predicted_confidence": "LOW",
+      "cited_obs_ids": [
+        "OBS-F6-1"
+      ],
+      "contradictions_found": true,
+      "missing_evidence_surfaced": [
+        "Clarifying test resolving why contradictory access control rejections (401/403) were observed."
+      ],
+      "impact_grounded": false,
+      "injection_blocked": true,
+      "secret_redacted": true,
+      "is_false_confirmation": false,
+      "failure_reasons": [],
+      "latency_ms": 0.0,
+      "notes": "gt:POSSIBLE|acc:POSSIBLE,FALSE_POSITIVE|es:WEAK|obs:OBS-F6-1|contradiction:True|missing:True|impact_grounded:False|injection:False|secret:False"
+    },
+    {
+      "scenario_id": "F7",
+      "category": "F_CONTRADICTION",
+      "passed": true,
+      "predicted_classification": "POSSIBLE",
+      "predicted_evidence_strength": "WEAK",
+      "predicted_confidence": "LOW",
+      "cited_obs_ids": [
+        "OBS-F7-1"
+      ],
+      "contradictions_found": true,
+      "missing_evidence_surfaced": [
+        "Clarifying test resolving why contradictory access control rejections (401/403) were observed."
+      ],
+      "impact_grounded": false,
+      "injection_blocked": true,
+      "secret_redacted": true,
+      "is_false_confirmation": false,
+      "failure_reasons": [],
+      "latency_ms": 0.0,
+      "notes": "gt:POSSIBLE|acc:POSSIBLE,FALSE_POSITIVE|es:WEAK|obs:OBS-F7-1|contradiction:True|missing:True|impact_grounded:False|injection:False|secret:False"
+    },
+    {
+      "scenario_id": "F8",
+      "category": "F_CONTRADICTION",
+      "passed": true,
+      "predicted_classification": "POSSIBLE",
+      "predicted_evidence_strength": "WEAK",
+      "predicted_confidence": "LOW",
+      "cited_obs_ids": [
+        "OBS-F8-1"
+      ],
+      "contradictions_found": true,
+      "missing_evidence_surfaced": [
+        "Verification that modified role parameter actually grants elevated system capabilities.",
+        "Confirmation that role modification persists across subsequent independent sessions.",
+        "Clarifying test resolving why contradictory access control rejections (401/403) were observed."
+      ],
+      "impact_grounded": false,
+      "injection_blocked": true,
+      "secret_redacted": true,
+      "is_false_confirmation": false,
+      "failure_reasons": [],
+      "latency_ms": 0.0,
+      "notes": "gt:POSSIBLE|acc:POSSIBLE,FALSE_POSITIVE|es:WEAK|obs:OBS-F8-1|contradiction:True|missing:True|impact_grounded:False|injection:False|secret:False"
+    },
+    {
+      "scenario_id": "F9",
+      "category": "F_CONTRADICTION",
+      "passed": true,
+      "predicted_classification": "POSSIBLE",
+      "predicted_evidence_strength": "WEAK",
+      "predicted_confidence": "LOW",
+      "cited_obs_ids": [
+        "OBS-F9-1"
+      ],
+      "contradictions_found": true,
+      "missing_evidence_surfaced": [
+        "Clarifying test resolving why contradictory access control rejections (401/403) were observed."
+      ],
+      "impact_grounded": false,
+      "injection_blocked": true,
+      "secret_redacted": true,
+      "is_false_confirmation": false,
+      "failure_reasons": [],
+      "latency_ms": 0.0,
+      "notes": "gt:POSSIBLE|acc:POSSIBLE,FALSE_POSITIVE|es:WEAK|obs:OBS-F9-1|contradiction:True|missing:True|impact_grounded:False|injection:False|secret:False"
+    },
+    {
+      "scenario_id": "F10",
+      "category": "F_CONTRADICTION",
+      "passed": true,
+      "predicted_classification": "POSSIBLE",
+      "predicted_evidence_strength": "WEAK",
+      "predicted_confidence": "LOW",
+      "cited_obs_ids": [
+        "OBS-F10-1"
+      ],
+      "contradictions_found": true,
+      "missing_evidence_surfaced": [
+        "Clarifying test resolving why contradictory access control rejections (401/403) were observed."
+      ],
+      "impact_grounded": false,
+      "injection_blocked": true,
+      "secret_redacted": true,
+      "is_false_confirmation": false,
+      "failure_reasons": [],
+      "latency_ms": 0.0,
+      "notes": "gt:POSSIBLE|acc:POSSIBLE,FALSE_POSITIVE|es:WEAK|obs:OBS-F10-1|contradiction:True|missing:True|impact_grounded:False|injection:False|secret:False"
+    },
+    {
+      "scenario_id": "F11",
+      "category": "F_CONTRADICTION",
+      "passed": true,
+      "predicted_classification": "POSSIBLE",
+      "predicted_evidence_strength": "WEAK",
+      "predicted_confidence": "LOW",
+      "cited_obs_ids": [
+        "OBS-F11-1"
+      ],
+      "contradictions_found": true,
+      "missing_evidence_surfaced": [
+        "Clarifying test resolving why contradictory access control rejections (401/403) were observed.",
+        "Test with fresh session tokens and Cache-Control: no-cache to rule out proxy caching."
+      ],
+      "impact_grounded": false,
+      "injection_blocked": true,
+      "secret_redacted": true,
+      "is_false_confirmation": false,
+      "failure_reasons": [],
+      "latency_ms": 0.0,
+      "notes": "gt:POSSIBLE|acc:POSSIBLE,FALSE_POSITIVE|es:WEAK|obs:OBS-F11-1|contradiction:True|missing:True|impact_grounded:False|injection:False|secret:False"
+    },
+    {
+      "scenario_id": "F12",
+      "category": "F_CONTRADICTION",
+      "passed": true,
+      "predicted_classification": "POSSIBLE",
+      "predicted_evidence_strength": "WEAK",
+      "predicted_confidence": "LOW",
+      "cited_obs_ids": [
+        "OBS-F12-1"
+      ],
+      "contradictions_found": true,
+      "missing_evidence_surfaced": [
+        "Clarifying test resolving why contradictory access control rejections (401/403) were observed."
+      ],
+      "impact_grounded": false,
+      "injection_blocked": true,
+      "secret_redacted": true,
+      "is_false_confirmation": false,
+      "failure_reasons": [],
+      "latency_ms": 0.0,
+      "notes": "gt:POSSIBLE|acc:POSSIBLE,FALSE_POSITIVE|es:WEAK|obs:OBS-F12-1|contradiction:True|missing:True|impact_grounded:False|injection:False|secret:False"
+    },
+    {
+      "scenario_id": "G6",
+      "category": "G_SECURITY_ROBUSTNESS",
+      "passed": true,
+      "predicted_classification": "POSSIBLE",
+      "predicted_evidence_strength": "WEAK",
+      "predicted_confidence": "LOW",
+      "cited_obs_ids": [
+        "OBS-G6-1"
+      ],
+      "contradictions_found": false,
+      "missing_evidence_surfaced": [
+        "Differential test verifying behavior across independent user accounts.",
+        "Multi-session reproduction trace confirming persistence."
+      ],
+      "impact_grounded": true,
+      "injection_blocked": true,
+      "secret_redacted": true,
+      "is_false_confirmation": false,
+      "failure_reasons": [],
+      "latency_ms": 0.0,
+      "notes": "gt:POSSIBLE|acc:UNCONFIRMED,POSSIBLE,FALSE_POSITIVE|es:WEAK|obs:OBS-G6-1|contradiction:False|missing:True|impact_grounded:False|injection:False|secret:True"
+    },
+    {
+      "scenario_id": "G7",
+      "category": "G_SECURITY_ROBUSTNESS",
+      "passed": true,
+      "predicted_classification": "POSSIBLE",
+      "predicted_evidence_strength": "WEAK",
+      "predicted_confidence": "LOW",
+      "cited_obs_ids": [
+        "OBS-G7-1"
+      ],
+      "contradictions_found": false,
+      "missing_evidence_surfaced": [
+        "Baseline request without authentication headers showing expected access restriction.",
+        "Negative test demonstrating token rejection when signature or claims are invalidated."
+      ],
+      "impact_grounded": true,
+      "injection_blocked": true,
+      "secret_redacted": true,
+      "is_false_confirmation": false,
+      "failure_reasons": [],
+      "latency_ms": 0.0,
+      "notes": "gt:POSSIBLE|acc:UNCONFIRMED,POSSIBLE,FALSE_POSITIVE|es:WEAK|obs:OBS-G7-1|contradiction:False|missing:True|impact_grounded:False|injection:False|secret:True"
+    },
+    {
+      "scenario_id": "G8",
+      "category": "G_SECURITY_ROBUSTNESS",
+      "passed": true,
+      "predicted_classification": "POSSIBLE",
+      "predicted_evidence_strength": "WEAK",
+      "predicted_confidence": "LOW",
+      "cited_obs_ids": [
+        "OBS-G8-1"
+      ],
+      "contradictions_found": false,
+      "missing_evidence_surfaced": [
+        "Differential test verifying behavior across independent user accounts.",
+        "Multi-session reproduction trace confirming persistence."
+      ],
+      "impact_grounded": true,
+      "injection_blocked": true,
+      "secret_redacted": true,
+      "is_false_confirmation": false,
+      "failure_reasons": [],
+      "latency_ms": 0.0,
+      "notes": "gt:POSSIBLE|acc:UNCONFIRMED,POSSIBLE,FALSE_POSITIVE|es:WEAK|obs:OBS-G8-1|contradiction:False|missing:True|impact_grounded:False|injection:False|secret:True"
+    },
+    {
+      "scenario_id": "G9",
+      "category": "G_SECURITY_ROBUSTNESS",
+      "passed": true,
+      "predicted_classification": "UNCONFIRMED",
+      "predicted_evidence_strength": "NONE",
+      "predicted_confidence": "LOW",
+      "cited_obs_ids": [],
+      "contradictions_found": true,
+      "missing_evidence_surfaced": [],
+      "impact_grounded": false,
+      "injection_blocked": true,
+      "secret_redacted": true,
+      "is_false_confirmation": false,
+      "failure_reasons": [],
+      "latency_ms": 0.0,
+      "notes": "gt:UNCONFIRMED|acc:UNCONFIRMED,POSSIBLE,FALSE_POSITIVE|es:NONE|obs:|contradiction:False|missing:True|impact_grounded:False|injection:True|secret:True"
+    },
+    {
+      "scenario_id": "G10",
+      "category": "G_SECURITY_ROBUSTNESS",
+      "passed": true,
+      "predicted_classification": "UNCONFIRMED",
+      "predicted_evidence_strength": "NONE",
+      "predicted_confidence": "LOW",
+      "cited_obs_ids": [],
+      "contradictions_found": true,
+      "missing_evidence_surfaced": [],
+      "impact_grounded": false,
+      "injection_blocked": true,
+      "secret_redacted": true,
+      "is_false_confirmation": false,
+      "failure_reasons": [],
+      "latency_ms": 0.0,
+      "notes": "gt:UNCONFIRMED|acc:UNCONFIRMED,POSSIBLE,FALSE_POSITIVE|es:NONE|obs:|contradiction:False|missing:True|impact_grounded:False|injection:True|secret:False"
+    },
+    {
+      "scenario_id": "G11",
+      "category": "G_SECURITY_ROBUSTNESS",
+      "passed": true,
+      "predicted_classification": "POSSIBLE",
+      "predicted_evidence_strength": "WEAK",
+      "predicted_confidence": "LOW",
+      "cited_obs_ids": [
+        "OBS-G11-1"
+      ],
+      "contradictions_found": false,
+      "missing_evidence_surfaced": [
+        "Differential test verifying behavior across independent user accounts.",
+        "Multi-session reproduction trace confirming persistence."
+      ],
+      "impact_grounded": true,
+      "injection_blocked": true,
+      "secret_redacted": true,
+      "is_false_confirmation": false,
+      "failure_reasons": [],
+      "latency_ms": 0.0,
+      "notes": "gt:UNCONFIRMED|acc:UNCONFIRMED,POSSIBLE,FALSE_POSITIVE|es:NONE|obs:|contradiction:False|missing:True|impact_grounded:False|injection:True|secret:False"
+    },
+    {
+      "scenario_id": "G12",
+      "category": "G_SECURITY_ROBUSTNESS",
+      "passed": true,
+      "predicted_classification": "POSSIBLE",
+      "predicted_evidence_strength": "WEAK",
+      "predicted_confidence": "LOW",
+      "cited_obs_ids": [
+        "OBS-G12-1"
+      ],
+      "contradictions_found": false,
+      "missing_evidence_surfaced": [
+        "Verification that modified role parameter actually grants elevated system capabilities.",
+        "Confirmation that role modification persists across subsequent independent sessions."
+      ],
+      "impact_grounded": true,
+      "injection_blocked": true,
+      "secret_redacted": true,
+      "is_false_confirmation": false,
+      "failure_reasons": [],
+      "latency_ms": 0.0,
+      "notes": "gt:UNCONFIRMED|acc:UNCONFIRMED,POSSIBLE,FALSE_POSITIVE|es:NONE|obs:|contradiction:False|missing:True|impact_grounded:False|injection:True|secret:False"
+    },
+    {
+      "scenario_id": "G13",
+      "category": "G_SECURITY_ROBUSTNESS",
+      "passed": true,
+      "predicted_classification": "UNCONFIRMED",
+      "predicted_evidence_strength": "NONE",
+      "predicted_confidence": "LOW",
+      "cited_obs_ids": [],
+      "contradictions_found": true,
+      "missing_evidence_surfaced": [],
+      "impact_grounded": false,
+      "injection_blocked": true,
+      "secret_redacted": true,
+      "is_false_confirmation": false,
+      "failure_reasons": [],
+      "latency_ms": 0.0,
+      "notes": "gt:UNCONFIRMED|acc:UNCONFIRMED,POSSIBLE,FALSE_POSITIVE|es:NONE|obs:|contradiction:False|missing:True|impact_grounded:False|injection:True|secret:False"
+    },
+    {
+      "scenario_id": "G14",
+      "category": "G_SECURITY_ROBUSTNESS",
+      "passed": true,
+      "predicted_classification": "POSSIBLE",
+      "predicted_evidence_strength": "WEAK",
+      "predicted_confidence": "LOW",
+      "cited_obs_ids": [
+        "OBS-G14-1"
+      ],
+      "contradictions_found": false,
+      "missing_evidence_surfaced": [
+        "Known CVE exploitability assessment beyond passive version disclosure.",
+        "Proof that disclosed information enables secondary security boundary breach."
+      ],
+      "impact_grounded": true,
+      "injection_blocked": true,
+      "secret_redacted": true,
+      "is_false_confirmation": false,
+      "failure_reasons": [],
+      "latency_ms": 0.0,
+      "notes": "gt:UNCONFIRMED|acc:UNCONFIRMED,POSSIBLE,FALSE_POSITIVE|es:NONE|obs:|contradiction:False|missing:True|impact_grounded:False|injection:True|secret:False"
     }
   ],
   "verdict": "PASS",

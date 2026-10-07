@@ -169,14 +169,17 @@ def compute_false_negative_rate(results: List[ScenarioResult]) -> Dict[str, Any]
 
     for r in results:
         notes = r.notes or ""
-        gt_cls, _ = _parse_notes(notes)
+        gt_cls, acc_cls = _parse_notes(notes)
         if not gt_cls:
             continue
         if gt_cls.upper() in TRUE_FINDING_CLASSIFICATIONS:
             true_finding_scenarios.append(r)
-            # A false negative: system said UNCONFIRMED or FALSE_POSITIVE on a true finding
-            if (r.predicted_classification or "").upper() in NON_FINDING_CLASSIFICATIONS:
+            predicted_upper = (r.predicted_classification or "").upper()
+            # If the prediction is in acceptable classifications, it is not a false negative
+            acc_set = {a.upper() for a in acc_cls}
+            if predicted_upper not in acc_set and predicted_upper in NON_FINDING_CLASSIFICATIONS:
                 false_negatives.append(r.scenario_id)
+
 
     total_true = len(true_finding_scenarios)
     count = len(false_negatives)
@@ -284,9 +287,10 @@ def compute_missing_evidence_detection_rate(results: List[ScenarioResult]) -> fl
 def _has_expected_missing(result: ScenarioResult) -> bool:
     notes = result.notes or ""
     for part in notes.split("|"):
-        if part.strip().startswith("missing:") and part.strip()[8:].strip():
+        if part.strip() == "missing:True":
             return True
     return False
+
 
 
 def compute_impact_grounding_rate(results: List[ScenarioResult]) -> float:

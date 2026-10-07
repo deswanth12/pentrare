@@ -36,8 +36,8 @@ REDACTED_SENTINEL = "<REDACTED>"
 
 # Injection patterns (same set as Phase 9 report_generator)
 INJECTION_PATTERNS = [
-    re.compile(r"(?i)ignore\s+(?:all\s+)?previous\s+instructions"),
-    re.compile(r"(?i)system\s*(?:message|prompt)"),
+    re.compile(r"(?i)ignore\s+(?:all\s+)?(?:prior\s+|previous\s+)?instructions"),
+    re.compile(r"(?i)system\s*(?:message|prompt|override)"),
     re.compile(r"(?i)override\s+(?:system|all|policy)"),
     re.compile(r"(?i)disregard\s+all\s+prior"),
     re.compile(r"(?i)declare\s+(?:high\s+)?severity"),

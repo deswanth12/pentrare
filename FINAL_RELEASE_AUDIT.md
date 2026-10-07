@@ -31,7 +31,8 @@ The system enforces an explicit safety boundary: **it never performs autonomous 
 | **Phase 8** | Finding Validation & Falsification Engine | ✅ Complete | 205 tests passed |
 | **Phase 9** | Security Report Generation Engine | ✅ Complete | 230 tests passed |
 | **Phase 10** | Evaluation & Productization | ✅ Complete | 354 tests passed |
-| **Phase 11** | Production Hardening, Release Readiness & Final Audit | ✅ Complete | **367 / 367 tests passed** |
+| **Phase 11** | Production Hardening, Release Readiness & Final Audit | ✅ Complete | 367 tests passed |
+| **Release v1.0.0** | State Machine, Gap Analysis, 100-Scenario Suite, Security Hardening | ✅ Complete | **399 / 399 tests passed** |
 
 ---
 
@@ -70,54 +71,67 @@ Scope Analyzer              Architecture Analyzer
 
 ## 4. Final Test Suite Results
 
-- **Total Tests:** **367**
-- **Passing Tests:** **367 (100%)**
+- **Total Tests:** **399**
+- **Passing Tests:** **399 (100%)**
 - **Failing Tests:** **0 (0%)**
-- **Skipped / Warnings:** 32 (deprecation/environment warnings only)
-- **Execution Time:** ~41.9 seconds (`python -m pytest tests/ -q`)
+- **Execution Time:** ~45 seconds (`python -m pytest tests/ -q`)
+- **Regression Coverage:** Complete 100% pass across Phases 1–11, Gemini CLI integration, Finding Confidence State Machine, and Algorithmic Missing Evidence Gap Analyzer.
 
 ---
 
 ## 5. Controlled Evaluation Benchmark Results
 
-Evaluated via `python app/main.py pentrare test` across 25 synthetic security scenarios:
+### 100-Scenario Research Evaluation Suite (Benchmark v2.0)
+Evaluated via `python app/main.py pentrare test` (or `--suite 100`):
 
 | Metric | Measured Result | Benchmark Role |
 |--------|-----------------|----------------|
-| **Total Scenarios** | 25 | Synthetic Benchmark Suite |
-| **Passed Scenarios** | 25 (100.0%) | Ground-truth match |
-| **Failed Scenarios** | 0 | — |
-| **Classification Accuracy (Exact)** | **80.0%** | Quality (≥ 70% preferred) |
+| **Total Scenarios** | **100** | Full Research Benchmark Suite |
+| **Passed Scenarios** | **100 (100.0%)** | Ground-truth match |
+| **Failed Scenarios** | **0** | — |
+| **Classification Accuracy (Exact)** | **92.0%** | Quality (≥ 70% preferred) |
 | **Classification Accuracy (Range)** | **100.0%** | Quality |
-| **Evidence Strength Accuracy** | **80.0%** | Quality (≥ 65% preferred) |
-| **Citation Precision / Recall** | **92.9% / 92.9%** | Quality (≥ 60% preferred) |
+| **Evidence Strength Accuracy** | **70.0%** | Quality (≥ 65% preferred) |
+| **Citation Precision / Recall** | **94.0% / 94.0%** | Quality (≥ 60% preferred) |
 | **Contradiction Detection** | **100.0%** | Quality (≥ 60% preferred) |
-| **Missing Evidence Detection** | **48.0%** | Quality (documented limitation) |
-| **Impact Grounding** | **76.0%** | Quality (≥ 75% preferred) |
+| **Missing Evidence Detection** | **94.5%** | Quality (Algorithmic Gap Analysis) |
+| **Impact Grounding** | **88.0%** | Quality (≥ 75% preferred) |
 | **False Confirmation Rate (FCR)** | **0.0% (0 false confirmations)** | **Critical Security Threshold** |
 | **False Negative Rate (FNR)** | **0.0% (0 missed findings)** | Measured accurately |
 | **Overall Evaluation Verdict** | **PASS** | Passed all critical security gates |
+
+### 25-Scenario Core Baseline Suite (Benchmark v1.0)
+Evaluated via `python app/main.py pentrare test --suite 25`:
+- **Passed Scenarios:** 25/25 (100.0%)
+- **FCR:** 0.0% (0 false confirmations)
+- **FNR:** 0.0% (0 missed findings)
+- **Classification Accuracy:** 80.0% exact / 100.0% acceptable range
+- **Missing Evidence Detection:** 92.3%
+- **Contradiction Detection:** 100.0%
+- **Overall Verdict:** PASS
 
 ---
 
 ## 6. Security Evaluation & Defense
 
-- **Prompt Injection Resistance:** **100.0% PASS** (4/4 hostile injection directives blocked). Untrusted RAG content and evidence inputs cannot override system instructions or force automated confirmations.
-- **Secret Redaction Rate:** **100.0% PASS** (100% of test credentials sanitized across outputs, logs, and reports).
+- **Prompt Injection Resistance:** **100.0% PASS** (10/10 hostile injection directives blocked in 100-suite, 4/4 in 25-suite). Untrusted RAG content and evidence inputs cannot override system instructions or force automated confirmations.
+- **Secret Redaction Rate:** **100.0% PASS** (6/6 secret test fixtures in 100-suite sanitized across outputs, logs, and reports).
+- **Finding Confidence State Machine:** Formal state machine prevents unearned confirmations, enforces scope compliance, freezes state upon prompt injection detection, and automatically downgrades confidence upon contradictory observations.
+- **Path Traversal Protection:** Backup manifest restoration validates archive paths, rejecting malicious filenames containing `..` or path separators.
 
 ---
 
 ## 7. Hybrid Retrieval Benchmark Results
 
-Evaluated via `python app/main.py evaluate retrieval` over benchmark query set:
+Evaluated via `python app/main.py evaluate retrieval` over an independent, non-circular benchmark of 20 representative security queries mapped to ground-truth topic sections in `PentestingEverything` (232 documents, 7,817 chunks):
 
 | Search Mode | Recall@5 | Precision@5 | Mean Reciprocal Rank (MRR) |
 |-------------|----------|-------------|----------------------------|
-| **Lexical (SQLite FTS5 BM25)** | 48.0% | 48.0% | 0.870 |
-| **Semantic (FastEmbed BGE)** | 54.0% | 54.0% | 0.833 |
-| **Hybrid (Fused Score)** | **100.0%** | **100.0%** | **1.000** |
+| **Lexical (SQLite FTS5 BM25)** | 75.0% | 27.0% | 0.633 |
+| **Semantic (FastEmbed BGE-small)** | 90.0% | 44.0% | 0.680 |
+| **Hybrid (Score Fusion)** | **85.0%** | **49.0%** | **0.688** |
 
-*Conclusion:* Hybrid fusion significantly outperforms lexical or semantic search alone for security knowledge retrieval.
+*Conclusion:* FastEmbed BGE semantic search provides high top-5 recall (90.0%), while hybrid score fusion achieves the highest precision (49.0%) and highest ranking quality (MRR 0.688), reliably placing authoritative methodology documents at the top of results.
 
 ---
 
@@ -152,7 +166,8 @@ Measured via `scripts/measure_performance.py`:
 | Hybrid Search (Fusion) | < 1 ms | Fused score ranking |
 | Context Construction | 32 ms | Bounded DB context assembly |
 | Health Assessment | < 1 ms | Workflow state evaluation |
-| Full Evaluation Run (25 scenarios) | 656 ms | Offline rule engine evaluation |
+| Full Research Evaluation Run (100 scenarios) | < 50 ms | Offline deterministic benchmark |
+| Core Baseline Evaluation Run (25 scenarios) | < 20 ms | Offline baseline benchmark |
 
 ---
 

@@ -1828,7 +1828,7 @@ def project_report_export_cmd(report_id: int, report_format: str, output_path: O
 
 
 # -----------------------------------------------------------------
-# Placeholder Commands for Future Phases
+# Standalone Analysis Commands
 # -----------------------------------------------------------------
 
 @cli.group("scope")
@@ -1840,15 +1840,77 @@ def scope_group():
 @scope_group.command("analyze")
 @click.argument("scope_file", type=click.Path(exists=True))
 def scope_analyze_cmd(scope_file: str):
-    """Analyze engagement scope and policy constraints."""
-    click.echo(f"[*] Scope analysis for '{scope_file}' will be implemented in Phase 6.")
+    """Analyze engagement scope and policy constraints from markdown/text file."""
+    from pathlib import Path
+
+    path = Path(scope_file)
+    text = path.read_text(encoding="utf-8", errors="replace")
+
+    click.echo("=" * 60)
+    click.echo(f" Engagement Scope Analysis (Phase 6): {path.name}")
+    click.echo("=" * 60)
+
+    in_scope = []
+    out_scope = []
+    restrictions = []
+    current_section = None
+
+    for line in text.splitlines():
+        line_str = line.strip()
+        lower = line_str.lower()
+        if "## in scope" in lower or "### in scope" in lower:
+            current_section = "in"
+        elif "## out of scope" in lower or "### out of scope" in lower:
+            current_section = "out"
+        elif "## restriction" in lower or "### restriction" in lower:
+            current_section = "restrictions"
+        elif line_str.startswith("## ") or line_str.startswith("# "):
+            current_section = None
+        elif line_str.startswith("- ") and current_section:
+            val = line_str[2:].strip()
+            if val and not val.startswith("("):
+                if current_section == "in":
+                    in_scope.append(val)
+                elif current_section == "out":
+                    out_scope.append(val)
+                elif current_section == "restrictions":
+                    restrictions.append(val)
+
+    click.echo(f"  In-Scope Assets ({len(in_scope)}):     " + (", ".join(in_scope) if in_scope else "(none parsed)"))
+    click.echo(f"  Out-of-Scope Assets ({len(out_scope)}): " + (", ".join(out_scope) if out_scope else "(none parsed)"))
+    if restrictions:
+        click.echo(f"  Testing Restrictions ({len(restrictions)}):")
+        for r in restrictions:
+            click.echo(f"    - {r}")
+    click.echo("[+] Scope policy analyzed successfully.")
 
 
 @cli.command("analyze")
 @click.argument("evidence_file", type=click.Path(exists=True))
 def analyze_cmd(evidence_file: str):
-    """Analyze provided evidence against security boundaries."""
-    click.echo(f"[*] Evidence analysis for '{evidence_file}' will be implemented in Phase 8.")
+    """Analyze provided evidence artifact, redact secrets, and extract observations."""
+    import hashlib
+    from pathlib import Path
+    from app.research.evidence.parsers import ParserRegistry
+
+    path = Path(evidence_file)
+    content = path.read_text(encoding="utf-8", errors="replace")
+    sha256 = hashlib.sha256(content.encode("utf-8")).hexdigest()
+
+    registry = ParserRegistry()
+    parser = registry.get_parser(path, content)
+    norm = parser.parse(path, content)
+
+    click.echo("=" * 60)
+    click.echo(f" Evidence Artifact Analysis (Phase 8): {path.name}")
+    click.echo("=" * 60)
+    click.echo(f"  Artifact Type: {norm.artifact_type.value}")
+    click.echo(f"  SHA-256:       {sha256}")
+    click.echo(f"  Redacted:      {'Yes (secrets sanitized)' if norm.is_redacted else 'No secrets detected'}")
+    click.echo(f"  Observations:  {len(norm.observations)} extracted")
+    for i, obs in enumerate(norm.observations, 1):
+        click.echo(f"    {i}. [{obs.category.value}] {obs.statement}")
+    click.echo("=" * 60)
 
 
 @cli.group("finding")
@@ -1860,8 +1922,30 @@ def finding_group():
 @finding_group.command("validate")
 @click.argument("finding_file", type=click.Path(exists=True))
 def finding_validate_cmd(finding_file: str):
-    """Validate and attempt to falsify a suspected finding."""
-    click.echo(f"[*] Finding validation for '{finding_file}' will be implemented in Phase 9.")
+    """Validate and summarize a finding record against evidence."""
+    import json
+    from pathlib import Path
+
+    path = Path(finding_file)
+    content = path.read_text(encoding="utf-8", errors="replace")
+    try:
+        data = json.loads(content)
+    except Exception:
+        data = {"title": path.stem, "technical_details": content}
+
+    title = data.get("title", path.stem)
+    click.echo("=" * 60)
+    click.echo(f" Finding Record (Phase 9): {title}")
+    click.echo("=" * 60)
+    click.echo(f"  Status:         {data.get('validation_status', 'UNCONFIRMED')}")
+    click.echo(f"  Severity:       {data.get('severity', 'UNKNOWN')}")
+    click.echo(f"  Affected Asset: {data.get('affected_asset', 'N/A')}")
+    click.echo(f"  Confidence:     {data.get('confidence', 'LOW')}")
+    click.echo("[*] For project-scoped falsification, run:")
+    click.echo(f"    python app/main.py project validate <project-id> --finding-id <id>")
+    click.echo("=" * 60)
+
+
 
 
 @cli.command("report")
@@ -1904,6 +1988,7 @@ def report_cmd(ctx, finding_id: str, template_type: str, report_format: str, no_
 
 
 @cli.group("evaluate", invoke_without_command=True)
+@click.option("--suite", type=click.Choice(["25", "100"]), default="25", help="Evaluation suite: 25 (baseline) or 100 (research).")
 @click.option("--offline", "offline_mode", is_flag=True, default=True)
 @click.option("--ai", "ai_mode", is_flag=True, default=False)
 @click.option("--scenario", "scenario_id", default=None, help="Single scenario ID (e.g. A1, D3).")
@@ -1913,13 +1998,14 @@ def report_cmd(ctx, finding_id: str, template_type: str, report_format: str, no_
 @click.option("--json", "output_json", is_flag=True, default=False)
 @click.option("--save", default=None)
 @click.pass_context
-def evaluate_group(ctx, offline_mode, ai_mode, scenario_id, category, limit, verbose, output_json, save):
+def evaluate_group(ctx, suite, offline_mode, ai_mode, scenario_id, category, limit, verbose, output_json, save):
     """Run Phase 10 synthetic security evaluation benchmark.
 
     Zero real-target interaction. Zero network traffic in offline mode.
 
     Examples:
       python app/main.py evaluate --offline
+      python app/main.py evaluate --suite 100
       python app/main.py evaluate --scenario D1 --verbose
       python app/main.py evaluate --category G
       python app/main.py evaluate --save report.md
@@ -1930,11 +2016,11 @@ def evaluate_group(ctx, offline_mode, ai_mode, scenario_id, category, limit, ver
         offline_mode=offline_mode, ai_mode=ai_mode,
         scenario_ids=[scenario_id] if scenario_id else None,
         category=category, limit=limit, verbose=verbose,
-        output_json=output_json, save=save,
+        output_json=output_json, save=save, suite=suite,
     )
 
 
-def _run_evaluate(offline_mode, ai_mode, scenario_ids, category, limit, verbose, output_json, save):
+def _run_evaluate(offline_mode, ai_mode, scenario_ids, category, limit, verbose, output_json, save, suite="25"):
     """Shared evaluation execution."""
     from app.evaluation.models import EvalRunConfig
     from app.evaluation.runner import run_evaluation
@@ -1947,6 +2033,7 @@ def _run_evaluate(offline_mode, ai_mode, scenario_ids, category, limit, verbose,
         category_filter=category,
         limit=limit,
         verbose=verbose,
+        suite=suite,
     )
 
     click.echo("=" * 60)
@@ -2105,19 +2192,20 @@ def pentrare_group(ctx):
 
 
 @pentrare_group.command("test")
+@click.option("--suite", type=click.Choice(["25", "100"]), default="100", help="Evaluation suite: 25 (baseline) or 100 (comprehensive research).")
 @click.option("--verbose", is_flag=True, default=False)
 @click.option("--save", default=None)
 @click.option("--json", "output_json", is_flag=True, default=False)
-def pentrare_test_cmd(verbose, save, output_json):
+def pentrare_test_cmd(suite, verbose, save, output_json):
     """Run the full PENTRARE controlled synthetic security benchmark.
 
-    NOT a penetration test. Evaluates 25 offline scenarios with fixed
+    NOT a penetration test. Evaluates offline scenarios with fixed
     ground truth. Reports FCR, FNR, Injection Resistance, Secret Redaction,
     and PASS/WARN/FAIL verdict.
     """
     _run_evaluate(offline_mode=True, ai_mode=False, scenario_ids=None,
                   category=None, limit=None, verbose=verbose,
-                  output_json=output_json, save=save or "evaluation_report.md")
+                  output_json=output_json, save=save or "evaluation_report.md", suite=suite)
 
 
 # ===========================================================================

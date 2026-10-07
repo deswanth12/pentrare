@@ -182,7 +182,7 @@ class ValidationAssistant:
             linked_obs, hypothesis.get("title", "")
         )
         alt_explanations = self._detect_alternative_explanations(linked_obs, evidence_items)
-        missing_ev = self._detect_missing_evidence(linked_obs, bool(contra_ids))
+        missing_ev = self._detect_missing_evidence(linked_obs, bool(contra_ids), hypothesis.get("title", ""))
         obs_impact, pot_impact, unsup_impact = self._assess_impact_separation(
             linked_obs, hypothesis.get("title", "")
         )
@@ -646,15 +646,15 @@ class ValidationAssistant:
         self,
         observations: List[Dict[str, Any]],
         has_contradiction: bool,
+        hypothesis_title: str = "",
     ) -> List[str]:
-        missing = [
-            "Differential comparison requests between distinct authenticated user roles (e.g. User A vs User B).",
-            "Baseline request showing behavior when no authentication token or cookie is supplied.",
-            "Reproduction trace demonstrating persistence of the behavior across multiple sessions.",
-        ]
-        if has_contradiction:
-            missing.insert(0, "Clarifying test resolving why contradictory access control rejections (401/403) were observed.")
-        return missing
+        from app.research.evidence.gap_analyzer import MissingEvidenceAnalyzer
+        return MissingEvidenceAnalyzer.analyze_gaps(
+            hypothesis=hypothesis_title,
+            observations=observations,
+            classification="UNCONFIRMED" if not observations else "POSSIBLE",
+        )
+
 
     def _assess_impact_separation(
         self,

@@ -145,8 +145,14 @@ def verify_backup(backup_dir: Path | str) -> Dict[str, Any]:
     except Exception as e:
         return {"valid": False, "errors": [f"Invalid manifest JSON: {e}"], "manifest": {}}
 
-    # Verify DB file
-    db_path = bpath / manifest.get("database", {}).get("filename", "researcher.db")
+    # Verify DB file with path traversal check
+    db_filename = manifest.get("database", {}).get("filename", "researcher.db")
+    if ".." in db_filename or "/" in db_filename or "\\" in db_filename:
+        errors.append("Invalid database filename in manifest: path traversal detected")
+        db_path = bpath / "researcher.db"
+    else:
+        db_path = bpath / db_filename
+
     if not db_path.exists():
         errors.append("Database backup file missing")
     else:
@@ -165,16 +171,23 @@ def verify_backup(backup_dir: Path | str) -> Dict[str, Any]:
         except Exception as e:
             errors.append(f"SQLite database unreadable: {e}")
 
-    # Verify Vector Store if present
+    # Verify Vector Store if present with path traversal check
     vec_info = manifest.get("vector_store", {})
     if vec_info.get("exists", False):
-        vec_path = bpath / vec_info.get("filename", "vector_store.npz")
+        vec_filename = vec_info.get("filename", "vector_store.npz")
+        if ".." in vec_filename or "/" in vec_filename or "\\" in vec_filename:
+            errors.append("Invalid vector store filename in manifest: path traversal detected")
+            vec_path = bpath / "vector_store.npz"
+        else:
+            vec_path = bpath / vec_filename
+
         if not vec_path.exists():
             errors.append("Vector store backup file missing")
         else:
             expected_vec_hash = vec_info.get("sha256")
             if expected_vec_hash and _sha256_file(vec_path) != expected_vec_hash:
                 errors.append("Vector store SHA-256 hash mismatch")
+
 
             # Check NumPy npz readability
             try:

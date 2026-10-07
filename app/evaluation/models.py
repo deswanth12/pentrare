@@ -239,13 +239,14 @@ class BenchmarkMetrics(BaseModel):
 class EvalRunConfig(BaseModel):
     """Configuration for an evaluation run."""
 
-    benchmark_version: str = "1.0"
+    benchmark_version: str = "2.0"
     offline_mode: bool = True
     ai_mode: bool = False
     scenario_ids: Optional[List[str]] = None
     category_filter: Optional[str] = None
     limit: Optional[int] = None
     verbose: bool = False
+    suite: str = "25"
     timestamp: str = Field(default_factory=lambda: datetime.now(timezone.utc).isoformat())
 
 
