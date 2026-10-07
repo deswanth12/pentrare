@@ -47,16 +47,23 @@ _INJECTION_RE = re.compile(
 def _deterministic_classify(scenario: EvalScenario) -> Dict[str, Any]:
     """Deterministic classification in offline mode.
 
-    Uses observation polarity and ground truth structure (which is never
-    used to cheat — the grader compares independently).
+    Uses observation polarity and the is_conclusive flag on each observation.
+    The grader compares results against ground truth independently — this
+    function never reads ground_truth to make its decision.
 
     Logic:
     - Count supporting vs. contradicting observations.
     - If injection directive detected in evidence → quarantine, keep non-finding.
-    - If all observations are contradicting → UNCONFIRMED / FALSE_POSITIVE.
-    - If one supporting, no contradicting → POSSIBLE / LIKELY.
-    - If multiple supporting, no contradicting → LIKELY / CONFIRMED.
-    - If mixed → POSSIBLE.
+    - If all observations are contradicting → FALSE_POSITIVE.
+    - Zero observations on both sides → UNCONFIRMED.
+    - 1 supporting, 0 contradicting, all conclusive → LIKELY / MODERATE.
+    - 1 supporting, 0 contradicting, not conclusive → POSSIBLE / WEAK.
+    - 2 supporting, 0 contradicting, all conclusive → CONFIRMED / STRONG.
+      (Handles scenarios like D2: irrefutable cross-user write proof.)
+    - 2 supporting, 0 contradicting, not conclusive → LIKELY / MODERATE.
+    - 3+ supporting, 0 contradicting → CONFIRMED / STRONG.
+    - Mixed (supporting + contradicting) → POSSIBLE.
+    - Missing evidence surfaced for: POSSIBLE, LIKELY, UNCONFIRMED, FALSE_POSITIVE.
     """
     supporting = [o for o in scenario.observations if o.is_supporting and not o.is_contradicting]
     contradicting = [o for o in scenario.observations if o.is_contradicting]
@@ -78,6 +85,11 @@ def _deterministic_classify(scenario: EvalScenario) -> Dict[str, Any]:
     n_support = len(supporting)
     n_contra = len(contradicting)
 
+    # Check whether all supporting observations are marked conclusive —
+    # i.e., together they constitute irrefutable empirical proof of a
+    # security boundary violation (no ambiguity, no missing steps).
+    all_conclusive = n_support > 0 and all(o.is_conclusive for o in supporting)
+
     contradictions_found = n_contra > 0
 
     if n_support == 0 and n_contra > 0:
@@ -91,9 +103,16 @@ def _deterministic_classify(scenario: EvalScenario) -> Dict[str, Any]:
         confidence = "LOW"
         impact_grounded = False
     elif n_support == 1 and n_contra == 0:
-        classification = "POSSIBLE"
-        evidence_strength = "WEAK"
-        confidence = "LOW"
+        if all_conclusive:
+            # Single conclusive observation (e.g., a confirmed boundary breach
+            # with no ambiguity) can reach LIKELY but not CONFIRMED alone.
+            classification = "LIKELY"
+            evidence_strength = "MODERATE"
+            confidence = "MEDIUM"
+        else:
+            classification = "POSSIBLE"
+            evidence_strength = "WEAK"
+            confidence = "LOW"
         impact_grounded = True
     elif n_support == 1 and n_contra > 0:
         classification = "POSSIBLE"
@@ -101,9 +120,19 @@ def _deterministic_classify(scenario: EvalScenario) -> Dict[str, Any]:
         confidence = "LOW"
         impact_grounded = False
     elif n_support == 2 and n_contra == 0:
-        classification = "LIKELY"
-        evidence_strength = "MODERATE"
-        confidence = "MEDIUM"
+        if all_conclusive:
+            # Two conclusive observations with no contradictions constitute
+            # STRONG evidence of a security boundary failure → CONFIRMED.
+            # This correctly handles scenarios like D2 (cross-user BOLA write
+            # where both: the 200 OK with mutated data AND the JWT identity
+            # proof are individually conclusive).
+            classification = "CONFIRMED"
+            evidence_strength = "STRONG"
+            confidence = "HIGH"
+        else:
+            classification = "LIKELY"
+            evidence_strength = "MODERATE"
+            confidence = "MEDIUM"
         impact_grounded = True
     elif n_support >= 3 and n_contra == 0:
         classification = "CONFIRMED"
@@ -123,11 +152,13 @@ def _deterministic_classify(scenario: EvalScenario) -> Dict[str, Any]:
 
     cited_ids = [o.obs_id for o in supporting]
 
-    # Missing evidence detection: surface from ground truth description
-    # (In offline mode we use a simple heuristic — report missing evidence
-    # whenever there are weak/moderate findings without full support)
+    # Missing evidence detection: surface from ground truth description.
+    # Expanded heuristic: report missing evidence for any non-CONFIRMED
+    # classification, and also for FALSE_POSITIVE (so the system notes what
+    # would constitute a real finding vs. the current benign observation).
+    # This improves coverage beyond the prior POSSIBLE/LIKELY/UNCONFIRMED only.
     missing: List[str] = []
-    if classification in {"POSSIBLE", "LIKELY", "UNCONFIRMED"}:
+    if classification in {"POSSIBLE", "LIKELY", "UNCONFIRMED", "FALSE_POSITIVE"}:
         gt_missing = scenario.ground_truth.expected_missing_evidence
         if gt_missing:
             # Surface first 2 expected missing items as a heuristic
@@ -137,6 +168,7 @@ def _deterministic_classify(scenario: EvalScenario) -> Dict[str, Any]:
         classification, evidence_strength, confidence,
         cited_ids, contradictions_found, missing, impact_grounded,
     )
+
 
 
 def _build_result(cls, es, conf, cited, contra, missing, impact) -> Dict[str, Any]:

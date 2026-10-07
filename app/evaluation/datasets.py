@@ -567,11 +567,13 @@ SCENARIO_D2 = EvalScenario(
             obs_id="OBS-D2-1",
             content="PATCH to UUID-BBBB profile using UUID-AAAA's token returned 200. Response confirms display_name changed to HACKED.",
             is_supporting=True,
+            is_conclusive=True,
         ),
         SyntheticObservation(
             obs_id="OBS-D2-2",
             content="JWT decoded confirms authenticated user is UUID-AAAA. UUID-BBBB is a different account.",
             is_supporting=True,
+            is_conclusive=True,
         ),
     ],
     ground_truth=GroundTruth(

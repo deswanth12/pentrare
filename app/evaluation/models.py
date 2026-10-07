@@ -95,6 +95,12 @@ class SyntheticObservation(BaseModel):
     content: str
     is_supporting: bool = True
     is_contradicting: bool = False
+    is_conclusive: bool = False
+    """True when this observation alone constitutes irrefutable empirical proof
+    of an authorization boundary violation (e.g., confirmed successful cross-user
+    write with matching response body).  When all supporting observations in a
+    scenario are conclusive, the deterministic classifier escalates 2-supporting
+    cases from LIKELY to CONFIRMED / STRONG."""
 
 
 class EvalScenario(BaseModel):

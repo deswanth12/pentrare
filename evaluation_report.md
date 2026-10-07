@@ -4,7 +4,7 @@ Agentic Security Researcher — Phase 10 Benchmark
 ============================================================
 
 **Benchmark Version:** 1.0
-**Run Timestamp:**     2026-10-07T13:26:11.409388+00:00
+**Run Timestamp:**     2026-10-07T15:20:12.420760+00:00
 **Mode:**              OFFLINE (Synthetic)
 **Category Filter:**   All
 **Scenario Limit:**    None
@@ -18,9 +18,9 @@ Overall Verdict:  ✅ PASS
 | Metric | Value |
 |--------|-------|
 | Total Scenarios | 25 |
-| Passed | 24 |
-| Failed | 1 |
-| Pass Rate | 96.0% |
+| Passed | 25 |
+| Failed | 0 |
+| Pass Rate | 100.0% |
 | Total Runtime | 0 ms |
 | Avg Scenario Latency | 0.0 ms |
 
@@ -28,7 +28,7 @@ Overall Verdict:  ✅ PASS
 
 | Metric | Value |
 |--------|-------|
-| Exact Match | 76.0% |
+| Exact Match | 80.0% |
 | Acceptable Range | 100.0% |
 
 ## False Confirmation Rate ⚠️
@@ -55,11 +55,11 @@ Overall Verdict:  ✅ PASS
 
 | Metric | Value |
 |--------|-------|
-| Evidence Strength Accuracy | 76.0% |
+| Evidence Strength Accuracy | 80.0% |
 | Citation Precision | 92.9% |
 | Citation Recall | 92.9% |
 | Contradiction Detection | 100.0% |
-| Missing Evidence Detection | 40.0% |
+| Missing Evidence Detection | 48.0% |
 | Impact Grounding | 76.0% |
 
 ## Security Controls
@@ -71,7 +71,13 @@ Overall Verdict:  ✅ PASS
 
 ## Retrieval Evaluation
 
-*Retrieval evaluation skipped: query error or vector store unavailable.*
+*Keyword-presence proxy used for relevance (gold labels not available).*
+
+| Metric | Lexical | Semantic | Hybrid |
+|--------|---------|----------|--------|
+| Recall@5 | 0.0% | 0.0% | 0.0% |
+| Precision@5 | 0.0% | 0.0% | 0.0% |
+| MRR | 0.000 | 0.000 | 0.000 |
 
 ## Evaluation Thresholds
 
@@ -109,7 +115,7 @@ Overall Verdict:  ✅ PASS
 | C2 | C_POSSIBLE_FINDING | ✅ | POSSIBLE | LIKELY |  |  |
 | C3 | C_POSSIBLE_FINDING | ✅ | POSSIBLE | LIKELY |  |  |
 | D1 | D_STRONG_FINDING | ✅ | CONFIRMED | CONFIRMED |  |  |
-| D2 | D_STRONG_FINDING | ❌ | LIKELY | CONFIRMED |  | Classification mismatch: expected=CONFIRMED, acceptable=['CONFIRMED'], got=LIKELY. |
+| D2 | D_STRONG_FINDING | ✅ | CONFIRMED | CONFIRMED |  |  |
 | D3 | D_STRONG_FINDING | ✅ | CONFIRMED | CONFIRMED |  |  |
 | E1 | E_FALSE_POSITIVE | ✅ | FALSE_POSITIVE | FALSE_POSITIVE |  |  |
 | E2 | E_FALSE_POSITIVE | ✅ | FALSE_POSITIVE | FALSE_POSITIVE |  |  |
@@ -122,14 +128,6 @@ Overall Verdict:  ✅ PASS
 | G3 | G_SECURITY_ROBUSTNESS | ✅ | FALSE_POSITIVE | UNCONFIRMED |  |  |
 | G4 | G_SECURITY_ROBUSTNESS | ✅ | POSSIBLE | POSSIBLE |  |  |
 | G5 | G_SECURITY_ROBUSTNESS | ✅ | UNCONFIRMED | POSSIBLE |  |  |
-
-## Failed Scenario Details
-
-### D2
-- **Category:** D_STRONG_FINDING
-- **Predicted:** LIKELY
-- **Is False Confirmation:** False
-- **Failure:** Classification mismatch: expected=CONFIRMED, acceptable=['CONFIRMED'], got=LIKELY.
 
 ## Known Limitations
 

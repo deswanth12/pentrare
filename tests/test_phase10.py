@@ -496,10 +496,18 @@ class TestOfflineClassifier:
         assert result["classification"] == "CONFIRMED"
         assert result["evidence_strength"] == "STRONG"
 
-    def test_two_supporting_obs_yields_likely(self):
-        s = SCENARIO_BY_ID["D2"]  # 2 supporting observations
+    def test_two_conclusive_supporting_obs_yields_confirmed(self):
+        # D2 has 2 supporting observations both marked is_conclusive=True.
+        # They together constitute irrefutable cross-user BOLA proof:
+        #   OBS-D2-1: 200 OK with another UUID's data mutated
+        #   OBS-D2-2: JWT confirms authenticated user ≠ target UUID
+        # The classifier must escalate to CONFIRMED, matching ground truth.
+        s = SCENARIO_BY_ID["D2"]
         result = _deterministic_classify(s)
-        assert result["classification"] == "LIKELY"
+        assert result["classification"] == "CONFIRMED", (
+            f"Expected CONFIRMED for D2 (2 conclusive obs), got {result['classification']}"
+        )
+        assert result["evidence_strength"] == "STRONG"
 
     def test_injection_quarantined_not_escalated(self):
         s = SCENARIO_BY_ID["G1"]  # injection in evidence
