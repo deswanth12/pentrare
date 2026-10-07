@@ -2,6 +2,7 @@
 
 <p align="center">
   <img src="https://img.shields.io/badge/Release-v1.0.0--Production-blue.svg" alt="Release v1.0.0" />
+  <a href="https://github.com/deswanth12/pentrare/actions/workflows/ci.yml"><img src="https://github.com/deswanth12/pentrare/actions/workflows/ci.yml/badge.svg" alt="CI" /></a>
   <img src="https://img.shields.io/badge/Tests-367%20Passing-brightgreen.svg" alt="367 Tests Passing" />
   <img src="https://img.shields.io/badge/Python-3.10%20%7C%203.11%20%7C%203.12-blue.svg" alt="Python 3.10+" />
   <img src="https://img.shields.io/badge/FCR-0.0%25%20(Zero%20False%20Confirmation)-success.svg" alt="FCR 0.0%" />
