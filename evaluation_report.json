@@ -7,7 +7,7 @@
     "category_filter": null,
     "limit": null,
     "verbose": false,
-    "timestamp": "2026-10-07T12:42:53.209214+00:00"
+    "timestamp": "2026-10-07T13:26:11.409388+00:00"
   },
   "metrics": {
     "total_scenarios": 25,
@@ -33,7 +33,7 @@
     "secret_total_count": 2,
     "secret_redaction_rate": 1.0,
     "retrieval": {
-      "query_count": 10,
+      "query_count": 0,
       "recall_at_5_lexical": 0.0,
       "recall_at_5_semantic": 0.0,
       "recall_at_5_hybrid": 0.0,
@@ -43,7 +43,7 @@
       "mrr_lexical": 0.0,
       "mrr_semantic": 0.0,
       "mrr_hybrid": 0.0,
-      "notes": "Keyword-presence proxy used for relevance (gold labels not available)."
+      "notes": "Retrieval evaluation skipped: query error or vector store unavailable."
     },
     "total_runtime_ms": 0.0,
     "avg_scenario_latency_ms": 0.0

@@ -4,7 +4,7 @@ Agentic Security Researcher — Phase 10 Benchmark
 ============================================================
 
 **Benchmark Version:** 1.0
-**Run Timestamp:**     2026-10-07T12:42:53.209214+00:00
+**Run Timestamp:**     2026-10-07T13:26:11.409388+00:00
 **Mode:**              OFFLINE (Synthetic)
 **Category Filter:**   All
 **Scenario Limit:**    None
@@ -71,13 +71,7 @@ Overall Verdict:  ✅ PASS
 
 ## Retrieval Evaluation
 
-*Keyword-presence proxy used for relevance (gold labels not available).*
-
-| Metric | Lexical | Semantic | Hybrid |
-|--------|---------|----------|--------|
-| Recall@5 | 0.0% | 0.0% | 0.0% |
-| Precision@5 | 0.0% | 0.0% | 0.0% |
-| MRR | 0.000 | 0.000 | 0.000 |
+*Retrieval evaluation skipped: query error or vector store unavailable.*
 
 ## Evaluation Thresholds
 
