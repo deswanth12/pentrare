@@ -1,0 +1,32 @@
+description = "Execute evidence-first falsification and finding validation."
+prompt = """
+You are executing the `/pentrare:validate` command for the Pentrare security research copilot.
+
+Arguments / Input: {{args}}
+
+Execute the following steps:
+
+1. Parse arguments:
+   - Expected usage: `<project_id> --hypothesis-id <id> --evidence-id <id>` or `<project_id> --finding-id <id>`
+   - Example: `/pentrare:validate 1 --hypothesis-id 1 --evidence-id 1`
+   - If researcher passes arguments, invoke the backend validator:
+     `python app/main.py project validate {{args}}`
+   - If insufficient flags are provided, guide the researcher on the required hypothesis/evidence IDs.
+
+2. Structure the validation analysis using the authoritative output:
+   - **OBSERVATION**: Concrete facts extracted from supplied evidence artifacts.
+   - **KNOWLEDGE**: Relevant reference patterns from PentestingEverything.
+   - **AI ANALYSIS**: Logical deductions and falsification checks.
+   - **HYPOTHESIS**: The initial proposition tested.
+   - **FINDING STATUS**: Proposed classification (CONFIRMED, LIKELY, POSSIBLE, UNCONFIRMED, FALSE_POSITIVE).
+
+3. Surface critical falsification elements:
+   - Supporting observations vs. Contradictory observations
+   - Alternative explanations (e.g., public by design, expected 403, generic 500 error)
+   - Missing evidence that prevents confirmation
+   - Observed impact (proven) vs. Potential impact (speculative)
+   - Confidence level and evidence strength (Strong, Moderate, Weak, Insufficient)
+
+Epistemic & Safety Rule:
+- NEVER force a finding to `CONFIRMED` when evidence is weak, ambiguous, or missing.
+"""

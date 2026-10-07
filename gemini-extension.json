@@ -1,0 +1,60 @@
+{
+  "name": "pentrare",
+  "version": "1.0.0",
+  "description": "Evidence-grounded, human-in-the-loop AI security research copilot for authorized penetration testing, vulnerability validation, and bug bounty research.",
+  "author": "Pentrare Contributors",
+  "homepage": "https://github.com/deswanth12/pentrare",
+  "repository": "https://github.com/deswanth12/pentrare",
+  "license": "MIT",
+  "contextFileName": "GEMINI.md",
+  "skills": [
+    {
+      "name": "pentrare-security-research",
+      "path": ".gemini/skills/pentrare-security-research"
+    }
+  ],
+  "commands": [
+    {
+      "name": "pentrare:status",
+      "path": ".gemini/commands/pentrare/status.toml"
+    },
+    {
+      "name": "pentrare:search",
+      "path": ".gemini/commands/pentrare/search.toml"
+    },
+    {
+      "name": "pentrare:scope",
+      "path": ".gemini/commands/pentrare/scope.toml"
+    },
+    {
+      "name": "pentrare:plan",
+      "path": ".gemini/commands/pentrare/plan.toml"
+    },
+    {
+      "name": "pentrare:evidence",
+      "path": ".gemini/commands/pentrare/evidence.toml"
+    },
+    {
+      "name": "pentrare:validate",
+      "path": ".gemini/commands/pentrare/validate.toml"
+    },
+    {
+      "name": "pentrare:report",
+      "path": ".gemini/commands/pentrare/report.toml"
+    }
+  ],
+  "settings": [
+    {
+      "name": "GEMINI_API_KEY",
+      "description": "Google Gemini API Key for optional online AI reasoning (offline fallback supported)",
+      "envVar": "GEMINI_API_KEY",
+      "sensitive": true
+    }
+  ],
+  "policies": {
+    "autonomousProbing": false,
+    "payloadExecution": false,
+    "networkAttacks": false,
+    "humanInTheLoop": true
+  }
+}

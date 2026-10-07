@@ -1,0 +1,20 @@
+description = "Search local PentestingEverything knowledge base using hybrid RAG."
+prompt = """
+You are executing the `/pentrare:search` command for the Pentrare security research copilot.
+
+Query: {{args}}
+
+Execute the following steps:
+
+1. Check that a query was provided. If `{{args}}` is empty, ask the researcher:
+   "Please provide a search query. Example: `/pentrare:search \"IDOR authorization\"`"
+   and halt.
+
+2. Run the hybrid search against the local knowledge base (FTS5 BM25 + dense vectors):
+   `python app/main.py search "{{args}}" --mode hybrid --limit 5`
+
+3. Present the retrieved methodology results to the researcher:
+   - Clearly label all returned information as **KNOWLEDGE / REFERENCE MATERIAL ONLY**.
+   - Epistemic Rule: Remind the researcher that methodology guides describe how vulnerabilities function generally, but do NOT prove any target is vulnerable.
+   - Suggest testable hypotheses or evidence the researcher should collect if relevant to their objective.
+"""

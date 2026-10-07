@@ -1,0 +1,26 @@
+description = "Formulate structured research plans and testable hypotheses."
+prompt = """
+You are executing the `/pentrare:plan` command for the Pentrare security research copilot.
+
+Arguments / Input: {{args}}
+
+Execute the following steps:
+
+1. Parse arguments:
+   - Expected format: `<project_id> [objective]` (e.g., `/pentrare:plan 1 "Evaluate API authorization controls"`)
+   - If only `<project_id>` is provided without an objective:
+     - Run: `python app/main.py project next {{args}}`
+     - Display prioritized inquiries, current objectives, and unverified hypotheses for that project.
+   - If both `<project_id>` and `<objective>` are provided:
+     - Run: `python app/main.py project plan <project_id> --objective "<objective>"`
+
+2. Review the structured output with the researcher:
+   - **Relevant Concepts**: Core vulnerability classes from PentestingEverything.
+   - **Suggested Hypotheses**: Testable conjectures formulated for the researcher.
+   - **Evidence Needed**: Specific HTTP interactions, parameters, or logs the human researcher should collect.
+   - **Validation Questions**: Criteria that must be answered before a finding can be claimed.
+
+Mandatory Epistemic & Safety Rules:
+- A hypothesis is a theory, NOT a finding. Never mark a hypothesis confirmed without empirical evidence.
+- Zero Autonomous Probing: All testing steps must be carried out manually by the human researcher.
+"""

@@ -813,3 +813,88 @@ python app/main.py doctor
 - **Zero Hardcoded Secrets**: API keys are loaded via environment variables and never logged or included in reports.
 - **Privacy First**: Sensitive customer data, personal information (PII), or live target credentials should be sanitized before analysis.
 - **Strictly Authorized Testing**: This tool is designed exclusively for authorized testing environments, lab setups, CTFs, and explicit bug bounty scopes.
+
+---
+
+## 17. Gemini CLI Integration
+
+Pentrare integrates natively with the **Google Gemini CLI Agent Skills** and custom slash-command ecosystem, providing an evidence-first security research copilot while keeping the local Python CLI as the authoritative backend.
+
+### What Pentrare Provides to Gemini CLI
+- **Local Epistemic Knowledge**: Conversational access to 232 curated security documents and 7,817 indexed chunks via local hybrid RAG (FTS5 BM25 + dense vectors).
+- **Hypothesis Formulation**: Structured research planning and inquiry trees without autonomous attack risks.
+- **Evidence Sanitization & Inspection**: Ingestion of raw HTTP responses, logs, code, and HAR files with automatic secret redaction and prompt-injection quarantine.
+- **Falsification & Validation Engine**: Screening suspected issues against alternative explanations and policy bounds to eliminate false positives.
+- **Audited Report Drafting**: Generating standardized bug bounty and internal audit reports that require explicit human approval.
+
+### Available Slash Commands
+
+| Command | Purpose | Authoritative Backend |
+|---|---|---|
+| `/pentrare:status [project_id]` | Inspect system diagnostic health (`doctor`) or project workflow status | `python app/main.py doctor`<br>`python app/main.py project health <id>` |
+| `/pentrare:search "<query>"` | Search local methodology knowledge base with hybrid retrieval | `python app/main.py search "<query>" --mode hybrid` |
+| `/pentrare:scope [project_id]` | Define or inspect project scope and enforce explicit authorization | `python app/main.py project show <id>`<br>`python app/main.py project add-scope <id>` |
+| `/pentrare:plan <project_id> [objective]` | Formulate structured research checklists and testable hypotheses | `python app/main.py project plan <id> --objective "<obj>"`<br>`python app/main.py project next <id>` |
+| `/pentrare:evidence <project_id> [file]` | Import, sanitize, and inspect researcher-supplied empirical evidence | `python app/main.py project evidence-import <id> <file>`<br>`python app/main.py project artifacts <id>` |
+| `/pentrare:validate <project_id> [flags]` | Execute evidence-first falsification and finding classification | `python app/main.py project validate <id> --hypothesis-id <h> --evidence-id <e>` |
+| `/pentrare:report <finding_id>` | Generate evidence-grounded draft security reports | `python app/main.py project report <finding_id> --template-type bug_bounty` |
+
+### Safety Model & Epistemic Boundaries
+- **Strict Human-in-the-Loop**: The Gemini CLI integration **never** performs autonomous network scanning, exploit payload execution, credential testing, or persistence. All active target traffic is generated exclusively by the human researcher.
+- **Epistemic Separation**:
+  ```text
+  Knowledge  ≠  Hypothesis  ≠  Evidence  ≠  Finding
+  ```
+  Retrieved methodology from `PentestingEverything` is reference knowledge—it never proves a target is vulnerable.
+- **Prompt-Injection Resistance**: 100% prompt-injection resistance on the tested synthetic benchmark cases. Evidence artifacts and retrieved documents are quarantined as untrusted data, never instructions.
+- **Secret Redaction**: 100% secret redaction on benchmark tests. API keys, bearer tokens, and session cookies are sanitized before presentation or reporting.
+- **Authorization Enforcement**: Target assets without explicit authorization remain `UNKNOWN` or `OUT_OF_SCOPE`. Authorization is never inferred from domain names or URLs.
+
+### Example Conversational Workflow
+
+```text
+Researcher: /pentrare:status
+Assistant:  Runs 'python app/main.py doctor', reports 232 docs / 7,817 chunks healthy.
+
+Researcher: /pentrare:search "GraphQL introspection authorization bypass"
+Assistant:  Retrieves top-5 methodology chunks from PentestingEverything via hybrid RAG,
+            labeled explicitly as [KNOWLEDGE / REFERENCE].
+
+Researcher: /pentrare:scope 1
+Assistant:  Displays current scope for Project 1; notes api.target.local is IN_SCOPE with
+            explicit authorization; admin.target.local is OUT_OF_SCOPE.
+
+Researcher: /pentrare:plan 1 "Test GraphQL schema for sensitive object queries"
+Assistant:  Formulates testable hypotheses, evidence needed, and validation criteria.
+
+Researcher: /pentrare:evidence 1 ./evidence/graphql_query.http
+Assistant:  Sanitizes secrets, quarantines any prompt injections, extracts empirical observations.
+
+Researcher: /pentrare:validate 1 --hypothesis-id 1 --evidence-id 1
+Assistant:  Runs Finding Validation Engine, screens for alternative explanations,
+            and outputs classification (e.g., CONFIRMED or LIKELY).
+
+Researcher: /pentrare:report 1
+Assistant:  Generates DRAFT bug bounty report requiring human review and approval.
+```
+
+### Installation & Management
+
+The integration is pre-configured in the workspace:
+- **Skill**: `.gemini/skills/pentrare-security-research/SKILL.md`
+- **Commands**: `.gemini/commands/pentrare/*.toml`
+- **Extension Manifest**: `gemini-extension.json`
+- **Context & Rules**: `GEMINI.md`
+
+In the Gemini CLI:
+```text
+/commands list     # Verify /pentrare:* commands are registered
+/commands reload   # Reload command definitions after edits
+/skills list       # Verify pentrare-security-research is available
+/skills reload     # Reload skill definitions
+```
+
+### Limitations & Calibration
+- **No Universal Immunity**: Prompt-injection resistance is measured at 100% on the tested synthetic benchmark cases; it does not claim universal immunity against all novel adversarial attacks.
+- **Human Responsibility**: Findings must be reviewed by qualified human researchers before submitting to bug bounty platforms or client teams.
+

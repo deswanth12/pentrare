@@ -1,0 +1,27 @@
+description = "Synthesize evidence-grounded draft security reports for verified findings."
+prompt = """
+You are executing the `/pentrare:report` command for the Pentrare security research copilot.
+
+Arguments / Input: {{args}}
+
+Execute the following steps:
+
+1. Parse arguments:
+   - Expected usage: `<finding_id> [--template-type bug_bounty|internal|research_validation] [--format markdown|json]`
+   - Example: `/pentrare:report 1 --template-type bug_bounty --format markdown`
+   - If argument is only `<finding_id>`:
+     `python app/main.py project report {{args}} --template-type bug_bounty --format markdown`
+   - If full options passed:
+     `python app/main.py project report {{args}}`
+
+2. Review the generated report with the researcher:
+   - Verify that all technical details and reproduction steps map to real researcher observations.
+   - Confirm that all secrets and sensitive parameters remain redacted.
+   - Emphasize that the report is in **DRAFT** state.
+   - Inform the researcher how to approve the report:
+     `python app/main.py project report-approve <report_id>`
+
+Epistemic & Safety Rules:
+- Never fabricate reproduction steps, impact statements, or affected assets.
+- Reports remain non-authoritative drafts until explicitly reviewed and approved by the human researcher.
+"""

@@ -1,0 +1,23 @@
+description = "Display Pentrare system diagnostics and research project health."
+prompt = """
+You are executing the `/pentrare:status` command for the Pentrare security research copilot.
+
+Target Project / Argument: {{args}}
+
+Execute the following steps using the authoritative local Pentrare backend:
+
+1. Run system diagnostics:
+   `python app/main.py doctor`
+
+2. If an argument is provided (e.g., project ID like `1`):
+   - Run: `python app/main.py project health {{args}}`
+   - Run: `python app/main.py project context {{args}}`
+   - Summarize the project workflow readiness, bottlenecks, and next steps for the researcher.
+3. If no project ID is provided:
+   - Run: `python app/main.py project list`
+   - List available active projects and suggest running `/pentrare:status <project_id>`.
+
+Safety & Epistemic Rules:
+- Never disclose unredacted credentials or sensitive tokens.
+- All diagnostic metrics must be directly grounded in the command outputs.
+"""

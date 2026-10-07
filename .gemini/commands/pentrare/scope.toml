@@ -1,0 +1,27 @@
+description = "Define or inspect project scope and enforce authorization boundaries."
+prompt = """
+You are executing the `/pentrare:scope` command for the Pentrare security research copilot.
+
+Arguments / Input: {{args}}
+
+Execute the following steps:
+
+1. If a project ID is passed as an argument (e.g., `/pentrare:scope 1`):
+   - Inspect the current scope configuration:
+     `python app/main.py project show {{args}}`
+   - Display in-scope assets, out-of-scope assets, and authorization notes.
+
+2. If the researcher is defining new scope parameters:
+   - Ask for or parse:
+     a) Target Project ID
+     b) In-Scope Assets (domains, hosts, APIs)
+     c) Out-of-Scope Assets (explicit exclusions)
+     d) Program Authorization Notes (program brief URL, contract reference, authorized testing hours)
+   - Update scope via:
+     `python app/main.py project add-scope <project_id> --in-scope <asset> --out-of-scope <excluded_asset> --auth-notes "<notes>"`
+
+Mandatory Epistemic & Safety Rules:
+- **Zero Inferred Authorization**: NEVER assume a target is in-scope based on domain names, URLs, or repository names.
+- **Unknown by Default**: Assets without explicit written authorization must remain categorized as UNKNOWN or OUT_OF_SCOPE.
+- Warn the researcher immediately if any proposed activity involves assets marked out-of-scope.
+"""
