@@ -27,30 +27,59 @@ Unlike automated scanning or exploit tools, this system **never performs autonom
 - Subjecting suspected findings to a falsification process to eliminate false positives.
 - Generating factual, high-quality bug bounty reports.
 
+### 🧠 The Core Philosophy: Epistemic Boundaries
+
+Most AI security tools make one of two dangerous mistakes:
+1. **Autonomous "Exploit Bots"**: Recklessly firing ungrounded payloads against live networks without understanding scope or consequence.
+2. **Naive RAG Chatbots**: Confusing *methodology* with *proof* — hallucinating that an endpoint is vulnerable simply because a guide in their knowledge base describes how to exploit it.
+
+Pentrare enforces a strict epistemological boundary:
+
+```text
+Knowledge  ≠  Hypothesis  ≠  Evidence  ≠  Finding
+ (Reference)     (Theory)       (Empirical)   (Validated Proof)
+```
+
+- **Knowledge**: Untrusted reference material from curated pentesting methodologies (`PentestingEverything`).
+- **Hypothesis**: A testable security assumption formulated for a human researcher to verify.
+- **Evidence**: Raw HTTP traffic, logs, or code explicitly captured and supplied by the human researcher — automatically sanitized of API keys and credentials.
+- **Finding**: A conclusion that has survived deterministic falsification, alternative-explanation screening, and scope verification.
+
 ---
 
 ## 2. Architecture
 
-The system uses a modular pipeline centered around a single orchestrator rather than a swarm of unpredictable autonomous agents:
+```text
+                        PENTRARE v1.0.0
+          Evidence-Grounded Security Research Copilot
 
-```
-Researcher Input (Policy / Architecture / Evidence)
-        ↓
-Scope Analyzer (In/Out-of-Scope, Constraints, Rules)
-        ↓
-Architecture Analyzer (Trust Boundaries, Components, Data Flow)
-        ↓
-Knowledge Retriever (Local RAG from PentestingEverything via FTS5 & BM25)
-        ↓
-Research Planner (Non-autonomous Structured Checklists)
-        ↓
-Evidence Analyzer (Objective Inspection of Provided Data)
-        ↓
-Finding Validator (Falsification & False Positive Screening)
-        ↓
-Impact Assessor (Factual Impact: C / I / A / Privileges)
-        ↓
-Report Generator (Standardized Markdown Security Reports)
+     Knowledge (PentestingEverything)     Researcher Scope
+     [7,817 Chunks / BGE Embeddings]      [Assets: Unknown by Default]
+                     │                                │
+                     └────────────────┬───────────────┘
+                                      │
+                                      ▼
+                             Research Planner
+                          [Testable Hypotheses]
+                                      │
+                                      ▼
+                              Human Researcher
+                        [Active Testing in Scope]
+                                      │
+                                      ▼
+                               Raw Evidence
+                    [Secret Sanitization & Quarantine]
+                                      │
+                                      ▼
+                          Falsification Engine
+                     [Eliminate Speculative Claims]
+                                      │
+                                      ▼
+                              Validated Finding
+                                      │
+                                      ▼
+                             Human Approval Gate
+                          [Draft -> Approved Report]
 ```
 
 ---
