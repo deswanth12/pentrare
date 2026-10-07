@@ -1,8 +1,11 @@
-# Python bytecode & cache
+# Python bytecode & build
 __pycache__/
 *.py[cod]
 *$py.class
 *.so
+*.egg-info/
+build/
+dist/
 .pytest_cache/
 .coverage
 htmlcov/

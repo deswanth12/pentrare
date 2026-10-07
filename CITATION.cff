@@ -1,0 +1,19 @@
+cff-version: 1.2.0
+message: "If you use Pentrare in academic security research or vulnerability benchmarking, please cite it as below."
+authors:
+  - family-names: "Deswanth"
+    given-names: "K"
+    affiliation: "Independent Security Research"
+title: "Pentrare: An Evidence-Grounded, Human-in-the-Loop AI Security Research Copilot"
+version: 1.0.0
+date-released: 2026-10-07
+license: MIT
+repository-code: "https://github.com/deswanth12/pentrare"
+keywords:
+  - "cybersecurity"
+  - "penetration-testing"
+  - "application-security"
+  - "bug-bounty"
+  - "agentic-ai"
+  - "retrieval-augmented-generation"
+  - "prompt-injection-defense"

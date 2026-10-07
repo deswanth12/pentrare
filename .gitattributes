@@ -1,0 +1,24 @@
+# Auto detect text files and perform LF normalization
+* text=auto eol=lf
+
+# Force specific files to LF
+*.py text eol=lf
+*.md text eol=lf
+*.json text eol=lf
+*.toml text eol=lf
+*.yml text eol=lf
+*.yaml text eol=lf
+*.sh text eol=lf
+
+# Keep batch/cmd files as CRLF
+*.bat text eol=crlf
+*.cmd text eol=crlf
+
+# Binary files
+*.jpg binary
+*.jpeg binary
+*.png binary
+*.gif binary
+*.ico binary
+*.db binary
+*.npz binary

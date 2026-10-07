@@ -1,0 +1,63 @@
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "pentrare"
+version = "1.0.0"
+description = "Evidence-Grounded, Human-in-the-Loop AI Security Research Copilot"
+readme = "README.md"
+requires-python = ">=3.10"
+license = { text = "MIT" }
+authors = [
+    { name = "K Deswanth" }
+]
+keywords = [
+    "cybersecurity",
+    "penetration-testing",
+    "bug-bounty",
+    "security-research",
+    "rag",
+    "evidence-validation"
+]
+classifiers = [
+    "Development Status :: 5 - Production/Stable",
+    "Intended Audience :: Developers",
+    "Intended Audience :: Information Technology",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Topic :: Security",
+]
+dependencies = [
+    "click>=8.1.0",
+    "pydantic>=2.0.0",
+    "python-dotenv>=1.0.0",
+    "fastembed>=0.8.0",
+    "numpy>=1.26.0",
+    "rank-bm25>=0.2.2",
+    "pypdf>=4.0.0",
+    "google-genai>=2.0.0",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=8.0.0",
+    "pytest-asyncio>=0.23.0",
+]
+
+[project.scripts]
+pentrare = "app.main:cli"
+
+[project.urls]
+"Homepage" = "https://github.com/deswanth12/pentrare"
+"Repository" = "https://github.com/deswanth12/pentrare"
+"Issue Tracker" = "https://github.com/deswanth12/pentrare/issues"
+"Discussions" = "https://github.com/deswanth12/pentrare/discussions"
+
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["app*"]

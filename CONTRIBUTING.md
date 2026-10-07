@@ -6,7 +6,7 @@ Thank you for your interest in contributing to **Pentrare**!
 
 ## Code of Conduct
 
-This project is dedicated to providing a respectful, harassment-free experience for everyone. Please be considerate and respectful in all community interactions.
+This project is dedicated to providing a respectful, harassment-free experience for everyone. Please review and adhere to our [Code of Conduct](CODE_OF_CONDUCT.md) in all community interactions.
 
 ---
 

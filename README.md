@@ -1,13 +1,18 @@
 # Pentrare: Agentic Security Research Assistant
 
 <p align="center">
-  <img src="https://img.shields.io/badge/Release-v1.0.0--Production-blue.svg" alt="Release v1.0.0" />
+  <img src="assets/banner.jpg" alt="Pentrare Hero Banner" width="100%" />
+</p>
+
+<p align="center">
+  <a href="https://github.com/deswanth12/pentrare/releases"><img src="https://img.shields.io/badge/Release-v1.0.0-blue.svg" alt="Release v1.0.0" /></a>
   <a href="https://github.com/deswanth12/pentrare/actions/workflows/ci.yml"><img src="https://github.com/deswanth12/pentrare/actions/workflows/ci.yml/badge.svg" alt="CI" /></a>
-  <img src="https://img.shields.io/badge/Tests-367%20Passing-brightgreen.svg" alt="367 Tests Passing" />
+  <img src="https://img.shields.io/badge/Tests-384%20Passing-brightgreen.svg" alt="384 Tests Passing" />
   <img src="https://img.shields.io/badge/Python-3.10%20%7C%203.11%20%7C%203.12-blue.svg" alt="Python 3.10+" />
   <img src="https://img.shields.io/badge/FCR-0.0%25%20(Zero%20False%20Confirmation)-success.svg" alt="FCR 0.0%" />
   <img src="https://img.shields.io/badge/Injection%20Defense-100%25%20Quarantined-success.svg" alt="Injection Defense" />
-  <img src="https://img.shields.io/badge/License-MIT-green.svg" alt="License MIT" />
+  <img src="https://img.shields.io/badge/Gemini%20CLI-Extension%20Ready-blueviolet.svg" alt="Gemini CLI Extension" />
+  <a href="LICENSE"><img src="https://img.shields.io/badge/License-MIT-green.svg" alt="License MIT" /></a>
 </p>
 
 > **Evidence-Grounded • Human-in-the-Loop • 0% False Confirmation Rate • Local Hybrid RAG**
@@ -897,4 +902,39 @@ In the Gemini CLI:
 ### Limitations & Calibration
 - **No Universal Immunity**: Prompt-injection resistance is measured at 100% on the tested synthetic benchmark cases; it does not claim universal immunity against all novel adversarial attacks.
 - **Human Responsibility**: Findings must be reviewed by qualified human researchers before submitting to bug bounty platforms or client teams.
+
+---
+
+## 18. Community & Contributing
+
+We welcome contributions from application security engineers, security researchers, and AI safety practitioners!
+
+- **Contributing Guide**: Please review [CONTRIBUTING.md](CONTRIBUTING.md) before submitting pull requests.
+- **Code of Conduct**: We adhere to the [Contributor Covenant](CODE_OF_CONDUCT.md).
+- **Security Policy**: Read our vulnerability disclosure process in [SECURITY.md](SECURITY.md).
+- **Benchmark Datasets**: Submit new synthetic, ground-truth research scenarios using our [Benchmark Issue Template](.github/ISSUE_TEMPLATE/security_scenario.md).
+
+---
+
+## 19. Citation
+
+If you reference Pentrare in academic security research, vulnerability benchmark evaluations, or technical publications, please cite it using [CITATION.cff](CITATION.cff) or the BibTeX format below:
+
+```bibtex
+@software{deswanth2026pentrare,
+  author = {Deswanth, K},
+  title = {Pentrare: An Evidence-Grounded, Human-in-the-Loop AI Security Research Copilot},
+  year = {2026},
+  publisher = {GitHub},
+  journal = {GitHub repository},
+  howpublished = {\url{https://github.com/deswanth12/pentrare}},
+  version = {1.0.0}
+}
+```
+
+---
+
+## 20. License
+
+Pentrare is open source software licensed under the [MIT License](LICENSE).
 
