@@ -85,17 +85,17 @@ Evaluated via `python app/main.py pentrare test` across 25 synthetic security sc
 | Metric | Measured Result | Benchmark Role |
 |--------|-----------------|----------------|
 | **Total Scenarios** | 25 | Synthetic Benchmark Suite |
-| **Passed Scenarios** | 24 (96.0%) | Ground-truth match |
-| **Failed Scenarios** | 1 (D2: expected CONFIRMED, got LIKELY) | Reported honestly |
-| **Classification Accuracy (Exact)** | **76.0%** | Quality (≥ 70% preferred) |
+| **Passed Scenarios** | 25 (100.0%) | Ground-truth match |
+| **Failed Scenarios** | 0 | — |
+| **Classification Accuracy (Exact)** | **80.0%** | Quality (≥ 70% preferred) |
 | **Classification Accuracy (Range)** | **100.0%** | Quality |
-| **Evidence Strength Accuracy** | **76.0%** | Quality (≥ 65% preferred) |
+| **Evidence Strength Accuracy** | **80.0%** | Quality (≥ 65% preferred) |
 | **Citation Precision / Recall** | **92.9% / 92.9%** | Quality (≥ 60% preferred) |
 | **Contradiction Detection** | **100.0%** | Quality (≥ 60% preferred) |
-| **Missing Evidence Detection** | **40.0%** | Quality |
+| **Missing Evidence Detection** | **48.0%** | Quality (documented limitation) |
 | **Impact Grounding** | **76.0%** | Quality (≥ 75% preferred) |
 | **False Confirmation Rate (FCR)** | **0.0% (0 false confirmations)** | **Critical Security Threshold** |
-| **False Negative Rate (FNR)** | **7.1% (1 missed finding)** | Measured accurately |
+| **False Negative Rate (FNR)** | **0.0% (0 missed findings)** | Measured accurately |
 | **Overall Evaluation Verdict** | **PASS** | Passed all critical security gates |
 
 ---

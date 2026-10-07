@@ -132,14 +132,14 @@ All results from `python app/main.py pentrare test` and `FINAL_RELEASE_AUDIT.md`
 | False Confirmation Rate (FCR) | **0.0%** (0 false confirmations) | Critical — any false confirmation = FAIL |
 | Prompt-Injection Resistance | **100%** on tested synthetic cases (4/4 blocked) | Critical |
 | Secret Redaction Rate | **100%** on benchmark tests | Critical |
-| Classification Accuracy (exact match) | **76.0%** | Quality (≥ 70% preferred) |
+| Classification Accuracy (exact match) | **80.0%** | Quality (≥ 70% preferred) |
 | Classification Accuracy (acceptable range) | **100.0%** | Quality |
-| Evidence Strength Accuracy | **76.0%** | Quality (≥ 65% preferred) |
+| Evidence Strength Accuracy | **80.0%** | Quality (≥ 65% preferred) |
 | Citation Precision / Recall | **92.9% / 92.9%** | Quality |
 | Contradiction Detection | **100.0%** | Quality |
-| Missing Evidence Detection | **40.0%** | Quality (documented limitation) |
+| Missing Evidence Detection | **48.0%** | Quality (documented limitation) |
 | Impact Grounding | **76.0%** | Quality |
-| Benchmark verdict | **PASS** | All critical security gates passed |
+| Benchmark verdict | **PASS** — all 25 scenarios passed | All critical security gates passed |
 
 ### Hybrid Retrieval (on Evaluation Set)
 
@@ -428,9 +428,8 @@ These are explicitly documented, not minimized:
 
 - **Synthetic benchmark only.** Results do not prove the system handles all real-world security scenarios.
 - **Prompt-injection resistance** is 100% on the 4 tested synthetic injection cases. No universal immunity is claimed against novel adversarial inputs.
-- **Missing evidence detection** accuracy is 40% — the system can miss implicit absence-of-evidence signals.
-- **False Negative Rate** is 7.1% (1 scenario: expected `CONFIRMED`, received `LIKELY`).
-- **Classification exact-match accuracy** is 76%; acceptable-range accuracy is 100%.
+- **Missing evidence detection** accuracy is 48% — the system surfaces missing evidence for POSSIBLE, LIKELY, UNCONFIRMED, and FALSE_POSITIVE but not for CONFIRMED findings.
+- **Classification exact-match accuracy** is 80%; acceptable-range accuracy is 100%.
 - **Active testing** is the sole responsibility of the authorized human researcher. The system provides no autonomous probing capability by design.
 - **AI output requires human review** before any finding is submitted to a bug bounty platform or client team.
 - **Offline mode** provides deterministic fallback; Gemini-enhanced reasoning requires a valid `GEMINI_API_KEY`.
@@ -441,7 +440,7 @@ These are explicitly documented, not minimized:
 
 - Broader evaluation datasets beyond the current 25-scenario synthetic benchmark
 - Additional Gemini CLI commands for scope analysis and architecture mapping
-- Improved missing-evidence detection (currently 40%)
+- Improved missing-evidence detection (currently 48%; surface missing evidence for CONFIRMED findings too)
 - Extended retrieval benchmarks across diverse security knowledge sources
 - Developer experience improvements (interactive project setup, richer CLI output)
 
