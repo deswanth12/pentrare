@@ -1,0 +1,40 @@
+# Python bytecode & cache
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.pytest_cache/
+.coverage
+htmlcov/
+
+# Environments & secrets
+.env
+.env.local
+.venv/
+env/
+venv/
+ENV/
+
+# Databases and Vector Stores
+*.db
+*.sqlite3
+storage/*
+!storage/.gitkeep
+storage/backups/
+*.npz
+chroma_db/
+faiss_index/
+
+# OS and Editor artifacts
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+
+# Local research projects & reports
+projects/*
+!projects/.gitkeep
+reports/*
+!reports/.gitkeep
+.agents/
+scratch/

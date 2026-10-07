@@ -1,0 +1,3 @@
+[submodule "knowledge/PentestingEverything"]
+	path = knowledge/PentestingEverything
+	url = https://github.com/m14r41/PentestingEverything.git
